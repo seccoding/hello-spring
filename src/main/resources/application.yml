@@ -1,0 +1,18 @@
+spring:
+    application.name: helo-spring
+    datasource:
+        url: jdbc:oracle:thin:@localhost:1521:XE
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+        username: SPRING_BOOT
+        password: 1234
+    mvc:
+        view:
+            prefix: /WEB-INF/views/
+            suffix: .jsp
+
+# classpath: ==> Java, XML 이런 파일을 가지고 있는 프로젝트 정보들이 컴파일되어
+#                보관하는 경로.
+# C:\dev_programs\sts_workspace\hello-spring\target\classes : classpath
+mybatis:
+    config-location: classpath:mybatis/mybatis-config.xml
+    mapper-locations: classpath:com/hello/forum/**/dao/mapper/*Mapper.xml

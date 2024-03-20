@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.forum.bbs.dao.BoardDao">
+  
+	<select id="getBoardAllCount" resultType="_int">
+		SELECT COUNT(1) 
+		  FROM BOARD
+		 WHERE DEL_YN = 'N'
+	</select>
+	
+	<select id="getAllBoard" resultType="com.hello.forum.bbs.vo.BoardVO">
+		SELECT * 
+		  FROM BOARD 
+		 WHERE DEL_YN = 'N'
+	</select>
+	
+	<!-- Insert 쿼리에는 resultType을 작성하지 않는다! -->
+	<insert id="insertNewBoard" 
+	        parameterType="com.hello.forum.bbs.vo.BoardVO">
+	    INSERT INTO BOARD
+		 (ID
+		, SUBJECT
+		, CONTENT
+		, EMAIL
+		, VIEW_CNT
+		, CRT_DT
+		, MDFY_DT
+		, FILE_NAME
+		, ORIGIN_FILE_NAME
+		, DEL_YN)
+		VALUES
+		 (SEQ_BOARD_PK.NEXTVAL
+		, #{subject} /*파라미터(BoardVO)의 getSubject()의 결과*/
+		, #{content} /*파라미터(BoardVO)의 getContent()의 결과*/
+		, #{email} /*파라미터(BoardVO)의 getEmail()의 결과*/
+		, 0
+		, SYSDATE
+		, NULL
+		, #{fileName} /*파라미터(BoardVO)의 getFileName()의 결과*/
+		, #{originFileName} /*파라미터(BoardVO)의 getOriginFileName()의 결과*/
+		, 'N')
+	</insert>
+  
+	<select id="selectOneBoard"
+	        parameterType="_int"
+	        resultType="com.hello.forum.bbs.vo.BoardVO">
+	    SELECT ID
+		     , SUBJECT
+		     , CONTENT
+		     , EMAIL
+		     , VIEW_CNT
+		     , CRT_DT
+		     , MDFY_DT
+		     , FILE_NAME
+		     , ORIGIN_FILE_NAME
+		     , DEL_YN
+		  FROM BOARD
+		 WHERE DEL_YN = 'N'
+		   AND ID = #{_parameter}
+	</select>
+	
+	<update id="increaseViewCount"
+	        parameterType="_int">
+	    UPDATE BOARD
+		   SET VIEW_CNT = VIEW_CNT + 1
+		 WHERE DEL_YN = 'N'
+		   AND ID = #{_parameter}
+	</update>
+  
+</mapper>
+
+
+
+
+
+
+
+
