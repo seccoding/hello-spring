@@ -69,6 +69,24 @@
 		   AND ID = #{_parameter}
 	</update>
   
+  	<update id="updateOneBoard"
+  	        parameterType="com.hello.forum.bbs.vo.BoardVO">
+  	    UPDATE BOARD
+		   SET SUBJECT = #{subject}
+		     , EMAIL = #{email}
+		     , CONTENT = #{content}
+		     , MDFY_DT = SYSDATE
+		 WHERE ID = #{id}
+  	</update>
+  
+  	<update id="deleteOneBoard"
+  	        parameterType="_int">
+  	    UPDATE BOARD
+		   SET DEL_YN = 'Y'
+		     , MDFY_DT = SYSDATE
+		 WHERE ID = #{_parameter}
+  	</update>
+  
 </mapper>
 
 

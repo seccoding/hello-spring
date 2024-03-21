@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -108,7 +109,8 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	// browser에서 URL을 http://localhost:8080/board/view?id=1
+	// browser에서 URL을 http://localhost:8080/board/view?id=1 <-- 나쁘지 않은 방법.
+	// browser에서 URL을 http://localhost:8080/board/view/1 
 	// URL ? <-- Query Parameter
 	// ?id=1 <-- Parameter Key: id, Parameter Value: 1
 	// ?id=1&subject=abc <-- Parameter Key: id, Parameter Value: 1 / Parameter Key: subject, Parameter Value: abc
@@ -117,13 +119,80 @@ public class BoardController {
 		
 		// 1. boardService에게 파라미터로 전달받은 id 값을 보내준다.
 		// 2. boardService는 파라미터로 전달받은 id의 게시글 정보를 조회해서 반환해주면
-		BoardVO boardVO = this.boardService.getOneBoard(id);
+		BoardVO boardVO = this.boardService.getOneBoard(id, true);
 		
 		// 3. boardview 페이지에 데이터를 전송해준다.
 		model.addAttribute("boardVO", boardVO);
 		
 		// 4. 화면을 보여준다.
 		return "board/boardview";
+	}
+	
+	
+	@GetMapping("/board/modify/{id}") // /board/modify/1 <-- id 변수의 값은 1
+	public String viewBoardModifyPage( @PathVariable int id, Model model ) {
+		// 1. 전달받은 id의 값으로 게시글을 조회한다.
+		BoardVO boardVO = this.boardService.getOneBoard(id, false);
+		
+		// 2. 게시글의 정보를 화면에 보내준다.
+		model.addAttribute("boardVO", boardVO);
+		
+		// 3. 화면을 보여준다.
+		return "board/boardmodify";
+	}
+	
+	/**
+	 * 게시글을 수정한다.
+	 * @param id 수정할 게시글의 번호
+	 * @param boardVO 사용자가 입력한 수정된 게시글의 정보 (제목, 이메일, 내용)
+	 * @return
+	 */
+	@PostMapping("/board/modify/{id}")
+	public String doBoardModify(@PathVariable int id, BoardVO boardVO) {
+		
+		// Command Object 에는 전달된 ID가 없으므로
+		// PathVariable로 전달된 ID를 셋팅해준다.
+		boardVO.setId(id);
+		
+		boolean isUpdatedSuccess = this.boardService.updateOneBoard(boardVO);
+		
+		if (isUpdatedSuccess) {
+			System.out.println("수정 성공했습니다!");
+		}
+		else {
+			System.out.println("수정 실패했습니다!");
+		}
+		
+		return "redirect:/board/view?id=" + id;
+	}
+	
+	/*
+	 * GET / POST
+	 * 
+	 * GET 데이터 조회. (페이지 보여주기, 게시글 정보 보여주기)
+	 * POST 데이터 등록. (게시글 등록하기)
+	 * PUT 데이터 수정 (게시글 수정하기, 좋아요 처리하기, 추천 처리하기)
+	 * DELETE 데이터 삭제 (게시글 삭제하기, 댓글 삭제하기)
+	 * 
+	 * JSP의 경우에는 PUT, DELETE 지원 하지 않음. 오로지 GET, POST만 지원.
+	 *    데이터 조회, 등록, 수정, 삭제 GET/POST를 이용해서 작성.
+	 * 
+	 * FORM 으로 데이터를 등록하거나 수정할 경우 -> POST
+	 * URL이나 링크 등으로 데이터를 조회하거나 삭제할 경우 -> GET
+	 */
+	@GetMapping("/board/delete/{id}")
+	public String doDeleteBoard(@PathVariable int id) {
+		
+		boolean isDeletedSuccess = this.boardService.deleteOneBoard(id);
+		
+		if (isDeletedSuccess) {
+			System.out.println("게시글 삭제 성공.");
+		}
+		else {
+			System.out.println("게시글 삭제 실패.");
+		}
+		
+		return "redirect:/board/list";
 	}
 	
 }

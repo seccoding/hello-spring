@@ -42,6 +42,21 @@ public interface BoardDao {
 	 * @return 업데이트 영향을 받은 데이터의 건수.
 	 */
 	public int increaseViewCount(int id);
+
+	/**
+	 * 전달받은 파라미터로 게시글 정보를 수정한다.
+	 * 게시글이 수정될 때, 수정날짜도 변경이 된다.
+	 * @param boardVO 사용자가 입력한 변경될 게시글의 정보
+	 * @return 업데이트 영향을 받은 데이터의 건수.
+	 */
+	public int updateOneBoard(BoardVO boardVO);
+
+	/**
+	 * 전달받은 게시글의 번호로 게시글을 논리적 삭제한다.
+	 * @param id 삭제할 게시글의 번호
+	 * @return 삭제 영향을 받은 데이터의 건수
+	 */
+	public int deleteOneBoard(int id);
 	
 }
 

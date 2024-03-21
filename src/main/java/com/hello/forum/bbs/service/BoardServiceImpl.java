@@ -63,20 +63,46 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public BoardVO getOneBoard(int id) {
+	public BoardVO getOneBoard(int id, boolean isIncrease) {
 		// 1. 게시글 정보 조회하기
 		BoardVO boardVO = this.boardDao.selectOneBoard(id);
 		
-		// 2. 게시글의 조회수를 1증가시키기
-		int updatedCount = this.boardDao.increaseViewCount(id);
-		if (updatedCount == 0) {
-			// 업데이트 영향을 받은 ROW가 단 한건도 없다면
-			// 사용자가 잘못 요청을 했거나
-			// 부정적인 방법으로 시스템을 이용하는 중으로 판단.
+		// 게시글을 조회한 결과가 null 이라면, 잘못된 접근입니다. 예외를 발생시킨다.
+		if (boardVO == null) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
+		}
+		
+		if (isIncrease) {
+			// 2. 게시글의 조회수를 1증가시키기
+			this.boardDao.increaseViewCount(id);
+//			if (updatedCount == 0) {
+//				// 업데이트 영향을 받은 ROW가 단 한건도 없다면
+//				// 사용자가 잘못 요청을 했거나
+//				// 부정적인 방법으로 시스템을 이용하는 중으로 판단.
+//				throw new IllegalArgumentException("잘못된 접근입니다.");
+//			}
 		}
 		
 		return boardVO;
 	}
 
+	@Override
+	public boolean updateOneBoard(BoardVO boardVO) {
+		int updatedCount = this.boardDao.updateOneBoard(boardVO);
+		return updatedCount > 0;
+	}
+
+	@Override
+	public boolean deleteOneBoard(int id) {
+		int deletedCount = this.boardDao.deleteOneBoard(id);
+		return deletedCount > 0;
+	}
+
 }
+
+
+
+
+
+
+
