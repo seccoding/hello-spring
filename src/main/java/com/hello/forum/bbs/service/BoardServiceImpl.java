@@ -4,10 +4,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hello.forum.bbs.dao.BoardDao;
 import com.hello.forum.bbs.vo.BoardListVO;
 import com.hello.forum.bbs.vo.BoardVO;
+import com.hello.forum.beans.FileHandler;
+import com.hello.forum.beans.FileHandler.StoredFile;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /*
  * @Service: @Controller 와 @Repository를 연결하는 역할
@@ -41,6 +48,9 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardDao boardDao;
 	
+	@Autowired
+	private FileHandler fileHandler;
+	
 	@Override
 	public BoardListVO getAllBoard() {
 		// BoardDaoImpl의 getBoardAllCount를 이용해서 게시글의 건 수를 알고 싶고
@@ -57,7 +67,25 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public boolean createNewBoard(BoardVO boardVO) {
+	public boolean createNewBoard(BoardVO boardVO, MultipartFile file) {
+		
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		System.out.println("IP: " + request.getRemoteAddr());
+		
+		
+		// 사용자가 파일을 업로드 했다면
+		if (file != null && ! file.isEmpty()) {
+			StoredFile storedFile = fileHandler.storeFile(file);
+			
+			// 업로드한 파일을 서버에 정상적으로 업로드 한 경우.
+			if (storedFile != null) {
+				// 난독화 처리된 파일의 이름
+				boardVO.setFileName(storedFile.getRealFileName());
+				// 사용자가 업로드한 파일의 이름
+				boardVO.setOriginFileName(storedFile.getFileName());
+			}
+		}
+		
 		int insertedCount = this.boardDao.insertNewBoard(boardVO);
 		return insertedCount > 0;
 	}

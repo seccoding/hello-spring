@@ -1,5 +1,7 @@
 package com.hello.forum.bbs.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hello.forum.bbs.vo.BoardListVO;
 import com.hello.forum.bbs.vo.BoardVO;
 
@@ -14,9 +16,10 @@ public interface BoardService {
 	/**
 	 * 새로운 게시글을 등록한다.
 	 * @param boardVO 사용자가 입력한 게시글의 내용
+	 * @param file 사용자가 업로드한 파일
 	 * @return 게시글 등록 성공 여부
 	 */
-	public boolean createNewBoard(BoardVO boardVO);
+	public boolean createNewBoard(BoardVO boardVO, MultipartFile file);
 
 	/**
 	 * 전달받은 파라미터의 게시글 정보를 조회해 반환한다.

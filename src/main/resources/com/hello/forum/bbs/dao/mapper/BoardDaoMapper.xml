@@ -11,7 +11,16 @@
 	</select>
 	
 	<select id="getAllBoard" resultType="com.hello.forum.bbs.vo.BoardVO">
-		SELECT * 
+		SELECT ID
+			 , SUBJECT
+			 , CONTENT
+			 , EMAIL
+			 , VIEW_CNT
+			 , TO_CHAR(CRT_DT, 'YYYY-MM-DD') CRT_DT
+			 , TO_CHAR(MDFY_DT, 'YYYY-MM-DD') MDFY_DT
+			 , FILE_NAME
+			 , ORIGIN_FILE_NAME
+			 , DEL_YN
 		  FROM BOARD 
 		 WHERE DEL_YN = 'N'
 	</select>
