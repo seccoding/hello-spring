@@ -1,20 +1,20 @@
 package com.hello.forum.bbs.vo;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+//import jakarta.validation.constraints.Email;
+//import jakarta.validation.constraints.NotEmpty;
 
 public class BoardVO {
 
 	private int id;
 	
-	@NotEmpty(message = "제목은 필수 입력 값입니다.") // 필수 입력값 체크
+//	@NotEmpty(message = "제목은 필수 입력 값입니다.") // 필수 입력값 체크
 	private String subject;
 	
-	@NotEmpty(message = "내용은 필수 입력 값입니다.")
+//	@NotEmpty(message = "내용은 필수 입력 값입니다.")
 	private String content;
 	
-	@NotEmpty(message = "이메일은 필수 입력 값입니다.")
-	@Email(message = "올바른 형식으로 입력하세요.") // 입력값이 이메일 형태인지 검사.
+//	@NotEmpty(message = "이메일은 필수 입력 값입니다.")
+//	@Email(message = "올바른 형식으로 입력하세요.") // 입력값이 이메일 형태인지 검사.
 	private String email;
 	private int viewCnt;
 	private String crtDt;

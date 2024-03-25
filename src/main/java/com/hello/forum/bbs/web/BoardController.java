@@ -5,7 +5,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +15,9 @@ import com.hello.forum.bbs.service.BoardService;
 import com.hello.forum.bbs.vo.BoardListVO;
 import com.hello.forum.bbs.vo.BoardVO;
 import com.hello.forum.beans.FileHandler;
+import com.hello.forum.utils.ValidationUtils;
 
-import jakarta.validation.Valid;
+//import jakarta.validation.Valid;
 
 @Controller
 public class BoardController {
@@ -83,10 +83,10 @@ public class BoardController {
 			 * 파라미터로 전송된 이름과 BoardVO의 멤버변수의 이름과 같은 것이 있다면
 			 * 해당 멤버변수에 파라미터의 값을 할당해준다!!! (setter 이용)
 			 * */
-			@Valid/*@NotEmpty, @Email, @Size, @Min, @Max 이런것들을 검사하도록 지시.*/ 
+//			@Valid/*@NotEmpty, @Email, @Size, @Min, @Max 이런것들을 검사하도록 지시.*/ 
 			BoardVO boardVO,
 			/*@Valid 에 의해 실행된 파라미터 검사(NotEmpty, Email. Size, Min, Max 등)의 결과.*/
-			BindingResult bindingResult,
+//			BindingResult bindingResult,
 			@RequestParam MultipartFile file,
 			Model model
 			) {
@@ -108,7 +108,42 @@ public class BoardController {
 //		System.out.println("내용: " + boardVO.getContent());
 		
 		// 검사 내용 확인.
-		if ( bindingResult.hasErrors() ) {
+//		if ( bindingResult.hasErrors() ) {
+//			model.addAttribute("boardVO", boardVO);
+//			return "board/boardwrite";
+//		}
+		
+		// 수동 검사 시작.
+		// 제목 검사.
+		boolean isNotEmptySubject = ValidationUtils.notEmpty( boardVO.getSubject() );
+		boolean isNotEmptyEmail = ValidationUtils.notEmpty( boardVO.getEmail() );
+		boolean isNotEmptyContent = ValidationUtils.notEmpty( boardVO.getContent() );
+		boolean isEmailFormat = ValidationUtils.email( boardVO.getEmail() );
+		
+		if ( !isNotEmptySubject ) {
+			// 제목을 입력하지 않았다면.
+			model.addAttribute("errorMessage", "제목은 필수 입력 값입니다.");
+			model.addAttribute("boardVO", boardVO);
+			return "board/boardwrite";
+		}
+		
+		if ( !isNotEmptyEmail ) {
+			// 이메일을 입력하지 않았다면.
+			model.addAttribute("errorMessage", "이메일은 필수 입력 값입니다.");
+			model.addAttribute("boardVO", boardVO);
+			return "board/boardwrite";
+		}
+		
+		if ( !isNotEmptyContent ) {
+			// 내용을 입력하지 않았다면.
+			model.addAttribute("errorMessage", "내용은 필수 입력 값입니다.");
+			model.addAttribute("boardVO", boardVO);
+			return "board/boardwrite";
+		}
+		
+		if ( !isEmailFormat ) {
+			// 이메일을 이메일 형태로 입력하지 않았다면.
+			model.addAttribute("errorMessage", "이메일을 올바른 형태로 작성해주세요.");
 			model.addAttribute("boardVO", boardVO);
 			return "board/boardwrite";
 		}
@@ -169,7 +204,47 @@ public class BoardController {
 	 * @return
 	 */
 	@PostMapping("/board/modify/{id}")
-	public String doBoardModify(@PathVariable int id, BoardVO boardVO, @RequestParam MultipartFile file) {
+	public String doBoardModify(
+			@PathVariable int id, 
+			BoardVO boardVO, 
+			@RequestParam MultipartFile file,
+			Model model) {
+		
+		// 수동 검사 시작.
+		// 제목 검사.
+		boolean isNotEmptySubject = ValidationUtils.notEmpty( boardVO.getSubject() );
+		boolean isNotEmptyEmail = ValidationUtils.notEmpty( boardVO.getEmail() );
+		boolean isNotEmptyContent = ValidationUtils.notEmpty( boardVO.getContent() );
+		boolean isEmailFormat = ValidationUtils.email( boardVO.getEmail() );
+		
+		if ( !isNotEmptySubject ) {
+			// 제목을 입력하지 않았다면.
+			model.addAttribute("errorMessage", "제목은 필수 입력 값입니다.");
+			model.addAttribute("boardVO", boardVO);
+			return "board/boardmodify";
+		}
+		
+		if ( !isNotEmptyEmail ) {
+			// 이메일을 입력하지 않았다면.
+			model.addAttribute("errorMessage", "이메일은 필수 입력 값입니다.");
+			model.addAttribute("boardVO", boardVO);
+			return "board/boardmodify";
+		}
+		
+		if ( !isNotEmptyContent ) {
+			// 내용을 입력하지 않았다면.
+			model.addAttribute("errorMessage", "내용은 필수 입력 값입니다.");
+			model.addAttribute("boardVO", boardVO);
+			return "board/boardmodify";
+		}
+		
+		if ( !isEmailFormat ) {
+			// 이메일을 이메일 형태로 입력하지 않았다면.
+			model.addAttribute("errorMessage", "이메일을 올바른 형태로 작성해주세요.");
+			model.addAttribute("boardVO", boardVO);
+			return "board/boardmodify";
+		}
+		
 		
 		// Command Object 에는 전달된 ID가 없으므로
 		// PathVariable로 전달된 ID를 셋팅해준다.

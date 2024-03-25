@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -36,35 +35,31 @@ pageEncoding="UTF-8"%>
       input[type="file"] {
         padding: 0;
       }
-      
-      div.errors {
-      	background-color: #FF00004A;
-      	opacity: 0.8;
-      	padding: 10px;
-      	color: #333;
-      }
-      
-      div.errors:last-child {
-      	margin-bottom: 15px;
-      }
     </style>
+    <script type="text/javascript">
+      window.onload = function () {
+        var dialog = document.querySelector(".alert-dialog");
+        dialog.showModal();
+      };
+    </script>
   </head>
   <body>
+    <c:if test="${not empty errorMessage}">
+      <dialog class="alert-dialog">
+        <h1>${errorMessage}</h1>
+      </dialog>
+    </c:if>
+
     <h1>게시글 작성</h1>
-    <form:form modelAttribute="boardVO" 
-               action="/board/write" 
-               method="post" 
-               enctype="multipart/form-data">
-		
-		<div>
-			<form:errors path="subject" element="div" cssClass="errors" />
-			<form:errors path="email" element="div" cssClass="errors" />
-			<form:errors path="content" element="div" cssClass="errors" />
-		</div>
-		
+    <form action="/board/write" method="post" enctype="multipart/form-data">
       <div class="grid">
         <label for="subject">제목</label>
-        <input type="text" id="subject" name="subject" value="${boardVO.subject}" />
+        <input
+          type="text"
+          id="subject"
+          name="subject"
+          value="${boardVO.subject}"
+        />
 
         <label for="subject">이메일</label>
         <input type="email" id="email" name="email" value="${boardVO.email}" />
@@ -73,7 +68,9 @@ pageEncoding="UTF-8"%>
         <input type="file" name="file" id="file" />
 
         <label for="content">내용</label>
-        <textarea id="content" name="content" style="height: 300px">${boardVO.content}</textarea>
+        <textarea id="content" name="content" style="height: 300px">
+${boardVO.content}</textarea
+        >
 
         <div class="btn-group">
           <div class="right-align">
@@ -81,6 +78,6 @@ pageEncoding="UTF-8"%>
           </div>
         </div>
       </div>
-    </form:form>
+    </form>
   </body>
 </html>
