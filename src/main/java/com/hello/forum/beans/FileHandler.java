@@ -2,18 +2,29 @@ package com.hello.forum.beans;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.tika.Tika;
 import org.springframework.web.multipart.MultipartFile;
 
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicException;
+import net.sf.jmimemagic.MagicMatch;
+import net.sf.jmimemagic.MagicMatchNotFoundException;
+import net.sf.jmimemagic.MagicParseException;
+
 public class FileHandler {
 
 	private String baseDir;
 	private boolean enableObfuscation;
 	private boolean enableObfuscationHideExt;
+	private boolean enableAvailableFileList;
 	private List<String> availableFileList;
+	private String handler;
 	
 	public void setBaseDir(String baseDir) {
 		this.baseDir = baseDir;
@@ -27,8 +38,16 @@ public class FileHandler {
 		this.enableObfuscationHideExt = enableObfuscationHideExt;
 	}
 	
+	public void setEnableAvailableFileList(boolean enableAvailableFileList) {
+		this.enableAvailableFileList = enableAvailableFileList;
+	}
+	
 	public void setAvailableFileList(List<String> availableFileList) {
 		this.availableFileList = availableFileList;
+	}
+	
+	public void setHandler(String handler) {
+		this.handler = handler;
 	}
 
 	/**
@@ -66,22 +85,44 @@ public class FileHandler {
 			return null;
 		}
 		
-		// 업로드된 파일의 마임타입을 가져온다.
-		Tika tika = new Tika();
-		try {
-			String mimeType = tika.detect(storePath);
+		if (this.enableAvailableFileList) {
+			// 업로드된 파일의 마임타입을 가져온다.
+			String mimeType = null;
+			
+			if ( this.handler.equalsIgnoreCase("tika") ) {
+				Tika tika = new Tika();
+				try {
+					mimeType = tika.detect(storePath);
+				} catch (IOException e) {
+					System.out.println(mimeType + " 파일은 업로드 할 수 없습니다.");
+					storePath.delete();
+					e.printStackTrace();
+					return null;
+				}
+			}
+			else if ( this.handler.equalsIgnoreCase("jmimemagic") ) {
+				Path path = Paths.get(storePath.getAbsolutePath());
+				try {
+					byte[] data = Files.readAllBytes(path);
+					MagicMatch match = Magic.getMagicMatch(data);
+					mimeType = match.getMimeType();
+				} catch (IOException | MagicParseException | MagicMatchNotFoundException | MagicException e) {
+					System.out.println(mimeType + " 파일은 업로드 할 수 없습니다.");
+					storePath.delete();
+					e.printStackTrace();
+					return null;
+				}
+			}
+			
 			if ( ! this.availableFileList.contains(mimeType) ) {
-				System.out.println(mimeType + " 파일은 업로드 할 수 없습니다.");
 				storePath.delete();
+				System.out.println(mimeType + " 파일은 업로드 할 수 없습니다.");
 				return null;
 			}
 			
 			System.out.println(mimeType + " 파일을 업로드했습니다.");
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+			
 		}
-		
 		
 		// 업로드 결과를 반환한다.
 		return new StoredFile(multipartFile.getOriginalFilename(), storePath);
@@ -129,6 +170,17 @@ public class FileHandler {
 		}
 		
 		return fileName;
+	}
+	
+	/**
+	 * 첨부된 파일을 삭제한다
+	 * @param storedFileName 삭제할 파일의 이름
+	 */
+	public void deleteFileByFileName(String storedFileName) {
+		File file = new File(this.baseDir, storedFileName);
+		if (file.exists() && file.isFile()) {
+			file.delete();
+		}
 	}
 	
 	public class StoredFile {

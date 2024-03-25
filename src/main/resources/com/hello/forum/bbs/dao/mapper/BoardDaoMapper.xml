@@ -85,6 +85,10 @@
 		     , EMAIL = #{email}
 		     , CONTENT = #{content}
 		     , MDFY_DT = SYSDATE
+		     <if test='fileName != null and fileName != ""'>
+		     , FILE_NAME = #{fileName}
+		     , ORIGIN_FILE_NAME = #{originFileName}
+		     </if>
 		 WHERE ID = #{id}
   	</update>
   

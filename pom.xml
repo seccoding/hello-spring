@@ -20,6 +20,20 @@
 	</properties>
 	<dependencies>
 		
+		<!-- https://mvnrepository.com/artifact/net.sf.jmimemagic/jmimemagic -->
+		<!-- 파일의 마임타입을 검사하는 도구 -->
+		<dependency>
+		    <groupId>net.sf.jmimemagic</groupId>
+		    <artifactId>jmimemagic</artifactId>
+		    <version>0.1.5</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>commons-io</groupId>
+		    		<artifactId>commons-io</artifactId>
+		    	</exclusion>
+		    </exclusions>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
 		<!-- 파일의 마임타입을 검사하는 도구 -->
 		<dependency>

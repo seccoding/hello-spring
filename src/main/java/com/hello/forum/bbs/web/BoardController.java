@@ -150,13 +150,13 @@ public class BoardController {
 	 * @return
 	 */
 	@PostMapping("/board/modify/{id}")
-	public String doBoardModify(@PathVariable int id, BoardVO boardVO) {
+	public String doBoardModify(@PathVariable int id, BoardVO boardVO, @RequestParam MultipartFile file) {
 		
 		// Command Object 에는 전달된 ID가 없으므로
 		// PathVariable로 전달된 ID를 셋팅해준다.
 		boardVO.setId(id);
 		
-		boolean isUpdatedSuccess = this.boardService.updateOneBoard(boardVO);
+		boolean isUpdatedSuccess = this.boardService.updateOneBoard(boardVO, file);
 		
 		if (isUpdatedSuccess) {
 			System.out.println("수정 성공했습니다!");

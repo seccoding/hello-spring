@@ -40,31 +40,35 @@ app:
                 # 파일 확장자 가릴 경우 true
                 enable: true
         available-file-list:
-            audio/aac,
-            video/x-msvideo,
-            text/css,
-            text/csv,
-            application/msword,
-            image/gif,
-            text/html,
-            image/jpeg,
-            application/json,
-            audio/midi,
-            video/mpeg,
-            audio/ogg,
-            video/ogg,
-            application/ogg,
-            application/pdf,
-            application/vnd.ms-powerpoint,
-            image/png,
-            image/tiff,
-            application/vnd.ms-excel,
-            application/zip,
-            application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-            application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-            application/vnd.openxmlformats-officedocument.presentationml.presentation,
-            text/plain
+            handler: tika
+            enable: true
+            list:
+                audio/aac,
+                video/x-msvideo,
+                text/css,
+                text/csv,
+                application/msword,
+                image/gif,
+                text/html,
+                image/jpeg,
+                application/json,
+                audio/midi,
+                video/mpeg,
+                audio/ogg,
+                video/ogg,
+                application/ogg,
+                application/pdf,
+                application/vnd.ms-powerpoint,
+                image/png,
+                image/tiff,
+                application/vnd.ms-excel,
+                application/zip,
+                application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                text/plain,
+                application/x-tika-ooxml
             
 
 

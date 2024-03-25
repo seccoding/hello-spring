@@ -9,7 +9,13 @@ public class BoardVO {
 	private int viewCnt;
 	private String crtDt;
 	private String mdfyDt;
+	/**
+	 * 서버에 저장된 파일의 이름 (난독화 처리된)
+	 */
 	private String fileName;
+	/**
+	 * 사용자가 업로드한 파일의 실제 이름
+	 */
 	private String originFileName;
 	private String delYn;
 
