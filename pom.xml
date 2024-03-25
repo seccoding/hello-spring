@@ -20,6 +20,12 @@
 	</properties>
 	<dependencies>
 		
+		<!-- 파라미터 검증을 위한 라이브러리 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/net.sf.jmimemagic/jmimemagic -->
 		<!-- 파일의 마임타입을 검사하는 도구 -->
 		<dependency>
