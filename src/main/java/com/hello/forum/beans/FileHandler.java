@@ -1,7 +1,10 @@
 package com.hello.forum.beans;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,6 +12,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.tika.Tika;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import net.sf.jmimemagic.Magic;
@@ -181,6 +189,47 @@ public class FileHandler {
 		if (file.exists() && file.isFile()) {
 			file.delete();
 		}
+	}
+	
+	/**
+	 * 서버에 저장된 파일을 사용자에게 다운로드 한다.
+	 * @param originFileName 사용자가 다운로드 받을 파일의 이름 (원본 명)
+	 * @param fileName 사용자에게 다운로드 해줄 서버에 저장된 파일의 이름.
+	 * @return 다운로드 스트림
+	 */
+	public ResponseEntity<Resource> download(String originFileName, String fileName) {
+		// 사용자에게 다운로드할 파일을 가져온다.
+		File downloadFile = new File(this.baseDir, fileName);
+		
+		// 사용자에게 다운로드할 파일의 이름을 셋팅한다.
+		// MS, Linux, Mac, 브라우저 별로 셋팅이 달란다.
+		
+		// 동작중인 서버가 Windows 일 경우, 파일의 이름을 Windows 전용 인코딩으로 변경해야한다.
+		String newFileName = originFileName;
+		try {
+			newFileName = new String(originFileName.getBytes("UTF-8"), "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		HttpHeaders header = new HttpHeaders();
+		header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + newFileName);
+		
+		// 사용자에게 다운로드할 준비를 진행한다.
+		InputStreamResource resource;
+		try {
+			resource = new InputStreamResource(new FileInputStream(downloadFile));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("파일이 존재하지 않습니다.");
+		}
+		
+		// 사용자에게 다운로드 해준다.
+		return ResponseEntity.ok()
+							 .headers(header)
+							 .contentLength(downloadFile.length())
+							 .contentType(MediaType.parseMediaType("application/donwload"))
+							 .body(resource);
 	}
 	
 	public class StoredFile {

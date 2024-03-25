@@ -130,6 +130,12 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
                     <a class="ellipsis" href="/board/view?id=${board.id}"
                       >${board.subject}</a
                     >
+
+                    <c:if test="${not empty board.originFileName}">
+                      <a href="/board/file/download/${board.id}"
+                        >첨부파일 다운로드</a
+                      >
+                    </c:if>
                   </td>
                   <td class="center-align">${board.email}</td>
                   <td class="center-align">${board.viewCnt}</td>

@@ -1,6 +1,8 @@
 package com.hello.forum.bbs.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hello.forum.bbs.service.BoardService;
 import com.hello.forum.bbs.vo.BoardListVO;
 import com.hello.forum.bbs.vo.BoardVO;
+import com.hello.forum.beans.FileHandler;
 
 @Controller
 public class BoardController {
 
+	@Autowired
+	private FileHandler fileHandler;
+	
 	/*
 	 * Bean Container에서 BoardService 타입의 객체를 찾아
 	 * 아래 멤버변수에게 할당한다 (DI: Dependency Injection)
@@ -197,7 +203,32 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
+	@GetMapping("/board/file/download/{id}")
+	public ResponseEntity<Resource> downloadFile(@PathVariable int id) {
+		
+		// 파일 다운로드를 위해서 id 값으로 게시글을 조회한다.
+		BoardVO boardVO = this.boardService.getOneBoard(id, false);
+		
+		// 만약, 게시글이 존재하지 않다면 "잘못된 접근입니다"라는 에러를 사용자에게 보여준다.
+		if (boardVO == null) {
+			throw new IllegalArgumentException("잘못된 접근입니다.");
+		}
+		
+		// 첨부된 파일이 없을 경우에도 "잘못된 접근입니다"라는 에러를 사용자에게 보여준다.
+		if (boardVO.getFileName() == null || boardVO.getFileName().length() == 0) {
+			throw new IllegalArgumentException("잘못된 접근입니다.");
+		}
+		
+		// 첨부된 파일이 있을 경우엔 파일을 사용자에게 보내준다 (Download)
+		return this.fileHandler.download(boardVO.getOriginFileName(), boardVO.getFileName());
+	}
+	
 }
+
+
+
+
+
 
 
 
