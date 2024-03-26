@@ -24,6 +24,29 @@
 		, 'N'
 		, #{salt})
 	</insert>
+
+	<select id="selectSalt" 
+			parameterType="string" 
+			resultType="string">
+		SELECT SALT
+		  FROM MEMBERS
+		 WHERE EMAIL = #{_parameter}
+		   AND DEL_YN = 'N'
+	</select>
+	
+	<select id="selectMemberByEmailAndPassword"
+			parameterType="com.hello.forum.member.vo.MemberVO"
+			resultType="com.hello.forum.member.vo.MemberVO">
+		SELECT EMAIL
+		     , NAME
+		     , PASSWORD
+		     , DEL_YN
+		     , SALT
+		  FROM MEMBERS
+		 WHERE EMAIL = #{email}
+		   AND PASSWORD = #{password}
+		   AND DEL_YN = 'N'
+	</select>
   
 </mapper>
 

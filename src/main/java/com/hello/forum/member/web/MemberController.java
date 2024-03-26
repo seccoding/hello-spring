@@ -1,6 +1,7 @@
 package com.hello.forum.member.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hello.forum.member.service.MemberService;
 import com.hello.forum.member.vo.MemberVO;
+import com.hello.forum.utils.AjaxResponse;
 import com.hello.forum.utils.StringUtils;
 import com.hello.forum.utils.ValidationUtils;
+import com.hello.forum.utils.Validator;
+import com.hello.forum.utils.Validator.Type;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MemberController {
@@ -123,8 +129,32 @@ public class MemberController {
 
 	@ResponseBody
 	@PostMapping("/member/login")
-	public Map<String, Object> doLogin() {
-		return null;
+	public AjaxResponse doLogin(MemberVO memberVO, HttpSession session) {
+
+		// Validation Check (파라미터 유효성 검사)
+		Validator<MemberVO> validator = new Validator<>(memberVO);
+		validator.add("email", Type.NOT_EMPTY, "이메일을 입력해주세요.")
+				.add("email", Type.EMAIL, "이메일 형식이 아닙니다.")
+				.add("password", Type.NOT_EMPTY, "비밀번호를 입력해주세요").start();
+
+		if (validator.hasErrors()) {
+			Map<String, List<String>> errors = validator.getErrors();
+			return new AjaxResponse().append("errors", errors);
+		}
+
+		try {
+			MemberVO member = this.memberService.getMember(memberVO);
+
+			System.out.println(session.getId());
+
+			// 로그인이 정상적으로 이루어졌다면 세션을 생성한다.
+			session.setAttribute("_LOGIN_USER_", member);
+		} catch (IllegalArgumentException iae) {
+			// 로그인에 실패했다면 화면으로 실패 사유를 보내준다.
+			return new AjaxResponse().append("errorMessage", iae.getMessage());
+		}
+
+		return new AjaxResponse().append("next", "/board/list");
 	}
 
 }

@@ -15,6 +15,7 @@ pageEncoding="UTF-8"%>
       }
     </style>
     <script type="text/javascript" src="/js/lib/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="/js/memberregist.js"></script>
   </head>
   <body>
     <h1>로그인</h1>
@@ -28,7 +29,7 @@ pageEncoding="UTF-8"%>
 
         <div class="btn-group">
           <div class="right-align">
-            <button type="button">로그인</button>
+            <button id="btn-login" type="button">로그인</button>
           </div>
         </div>
       </div>
