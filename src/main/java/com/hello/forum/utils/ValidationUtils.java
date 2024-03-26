@@ -18,4 +18,16 @@ public abstract class ValidationUtils {
 		return StringUtils.isEmailFormat(value);
 	}
 	
+	public final static boolean size(String value, int minSize) {
+		return StringUtils.isEnough(value, minSize);
+	}
+	
+	public final static boolean isEquals(String value, String otherValue) {
+		if (StringUtils.isEmpty(value) || StringUtils.isEmpty(otherValue)) {
+			return false;
+		}
+		
+		return value.equals(otherValue);
+	}
+	
 }
