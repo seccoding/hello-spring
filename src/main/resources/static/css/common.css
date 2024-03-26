@@ -1,0 +1,36 @@
+* {
+  box-sizing: border-box;
+}
+
+div.grid > div.btn-group {
+  grid-column: 1 / -1;
+}
+
+div.grid div.right-align {
+  text-align: right;
+}
+
+label {
+  padding-left: 10px;
+}
+
+button,
+input,
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+button:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+a:active,
+a:hover,
+a:visited,
+a:link {
+  color: #333;
+  text-decoration: none;
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.forum.member.dao.MemberDao">
+  
+	<select id="getEmailCount" parameterType="string" resultType="_int">
+		SELECT COUNT(1)
+		  FROM MEMBERS
+		 WHERE EMAIL = #{_parameter}
+	</select>
+	
+	<insert id="createNewMember" parameterType="com.hello.forum.member.vo.MemberVO">
+		INSERT INTO MEMBERS 
+		 (EMAIL
+		, NAME
+		, PASSWORD
+		, DEL_YN
+		, SALT)
+		VALUES
+		(#{email}
+		, #{name}
+		, #{password}
+		, 'N'
+		, #{salt})
+	</insert>
+  
+</mapper>
+
+
+
+
+
+
+
+
