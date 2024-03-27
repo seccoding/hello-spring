@@ -28,4 +28,6 @@ public interface MemberService {
 	 */
 	public MemberVO getMember(MemberVO memberVO);
 
+	public boolean deleteMe(String email);
+
 }

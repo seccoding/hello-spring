@@ -68,4 +68,9 @@ public class MemberServiceImpl implements MemberService {
 		return member;
 	}
 
+	@Override
+	public boolean deleteMe(String email) {
+		return this.memberDao.deleteMemberByEmail(email) > 0;
+	}
+
 }

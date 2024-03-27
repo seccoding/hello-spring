@@ -5,7 +5,7 @@ pageEncoding="UTF-8"%>
   <head>
     <meta charset="UTF-8" />
     <title>로그인</title>
-    <link rel="stylesheet" href="/css/common.css" />
+    <jsp:include page="../commonheader.jsp"></jsp:include>
     <style type="text/css">
       div.grid {
         display: grid;
@@ -13,8 +13,14 @@ pageEncoding="UTF-8"%>
         grid-template-rows: 28px 28px 1fr;
         row-gap: 10px;
       }
+
+      .error {
+        grid-column: 1 / -1;
+        color: #f00;
+        padding-left: 1rem;
+        margin: 0;
+      }
     </style>
-    <script type="text/javascript" src="/js/lib/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="/js/memberregist.js"></script>
   </head>
   <body>

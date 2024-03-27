@@ -41,4 +41,10 @@ public class MemberDaoImpl extends SqlSessionDaoSupport implements MemberDao {
 				memberVO);
 	}
 
+	@Override
+	public int deleteMemberByEmail(String email) {
+		return getSqlSession()
+				.update(MemberDao.NAME_SPACE + ".deleteMemberByEmail", email);
+	}
+
 }
