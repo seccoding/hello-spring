@@ -5,10 +5,10 @@ spring:
         driver-class-name: oracle.jdbc.driver.OracleDriver
         username: SPRING_BOOT
         password: 1234
-    mvc:
-        view:
-            prefix: /WEB-INF/views/
-            suffix: .jsp
+#    mvc:
+#        view:
+#            prefix: /WEB-INF/views/
+#            suffix: .jsp
     servlet:
         # 파일 업로드 설정
         multipart:
@@ -28,6 +28,17 @@ mybatis:
 
 # 사용자 설정
 app:
+    authentication:
+        check-url-pattern: /**
+        ignore-url-patterns:
+            /member/login,
+            /member/regist/**,
+            /member/success-delete-me,
+            /member/fail-delete-me,
+            /board/list,
+            /js/**,
+            /css/**,
+            /error/**
     multipart:
         #파일 업로드 위치 지정
         base-dir: c:/uploadFiles

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -45,18 +45,20 @@ pageEncoding="UTF-8"%>
       <label for="content">내용</label>
       <div>${boardVO.content}</div>
 
-      <div class="btn-group">
-        <div class="right-align">
-          <a href="/board/modify/${boardVO.id}">수정</a>
-          <!--
+      <c:if test="${sessionScope._LOGIN_USER_.email eq boardVO.email}">
+        <div class="btn-group">
+          <div class="right-align">
+            <a href="/board/modify/${boardVO.id}">수정</a>
+            <!--
             javascript:void(0);
             주로 anchor 태그의 href에 작성하는 코드.
             링크를 클릭했을 때, javascript를 이용해서 처리할 경우 위 처럼 작성을 한다.
             javascript:void(0); 이 코드는 anchor 태그의 링크 이동을 무시한다.
           -->
-          <a class="delete-board" href="javascript:void(0);">삭제</a>
+            <a class="delete-board" href="javascript:void(0);">삭제</a>
+          </div>
         </div>
-      </div>
+      </c:if>
     </div>
   </body>
 </html>

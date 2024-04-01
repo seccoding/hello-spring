@@ -123,7 +123,6 @@
   	        parameterType="com.hello.forum.bbs.vo.BoardVO">
   	    UPDATE BOARD
 		   SET SUBJECT = #{subject}
-		     , EMAIL = #{email}
 		     , CONTENT = #{content}
 		     , MDFY_DT = SYSDATE
 		     <if test='fileName != null and fileName != ""'>
