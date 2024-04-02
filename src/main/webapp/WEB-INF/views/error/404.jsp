@@ -8,7 +8,7 @@ pageEncoding="UTF-8"%>
     <jsp:include page="../commonheader.jsp"></jsp:include>
   </head>
   <body>
-    <h3>찾으시는 페이지는 존재하지 않습니다.</h3>
+    <h3>${message}</h3>
     <a href="/board/list">게시글 목록으로 가기</a>
   </body>
 </html>

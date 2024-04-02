@@ -60,6 +60,7 @@
 		    ON M.EMAIL = B.EMAIL
 		 WHERE B.DEL_YN = 'N'
 		   AND M.DEL_YN = 'N'
+		 ORDER BY B.ID DESC
 	</select>
 	
 	<!-- Insert 쿼리에는 resultType을 작성하지 않는다! -->

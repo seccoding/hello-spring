@@ -2,24 +2,44 @@ package com.hello.forum.bbs.vo;
 
 import com.hello.forum.member.vo.MemberVO;
 
+import io.github.seccoding.excel.annotations.ExcelSheet;
+import io.github.seccoding.excel.annotations.Field;
+import io.github.seccoding.excel.annotations.Format;
+import io.github.seccoding.excel.annotations.Title;
+
 //import jakarta.validation.constraints.Email;
 //import jakarta.validation.constraints.NotEmpty;
 
+@ExcelSheet(value = "Sheet1", useTitle = true, startRow = 2)
 public class BoardVO {
 
+	@Title("번호")
+	@Format(alignment = Format.LEFT)
 	private int id;
 
-//	@NotEmpty(message = "제목은 필수 입력 값입니다.") // 필수 입력값 체크
+	@Field("B")
+	@Title("제목")
+	@Format(alignment = Format.LEFT)
 	private String subject;
 
-//	@NotEmpty(message = "내용은 필수 입력 값입니다.")
+	@Field("C")
 	private String content;
 
-//	@NotEmpty(message = "이메일은 필수 입력 값입니다.")
-//	@Email(message = "올바른 형식으로 입력하세요.") // 입력값이 이메일 형태인지 검사.
+	@Field("A")
+	@Title("작성자 이메일")
+	@Format(alignment = Format.LEFT)
 	private String email;
+
+	@Title("조회수")
+	@Format(alignment = Format.LEFT)
 	private int viewCnt;
+
+	@Title(value = "등록일", date = true)
+	@Format(alignment = Format.LEFT, dataFormat = "yyyy-MM-dd")
 	private String crtDt;
+
+	@Title(value = "수정일", date = true)
+	@Format(alignment = Format.LEFT, dataFormat = "yyyy-MM-dd")
 	private String mdfyDt;
 	/**
 	 * 서버에 저장된 파일의 이름 (난독화 처리된)
@@ -28,7 +48,10 @@ public class BoardVO {
 	/**
 	 * 사용자가 업로드한 파일의 실제 이름
 	 */
+	@Title("첨부파일명")
+	@Format(alignment = Format.LEFT)
 	private String originFileName;
+
 	private String delYn;
 
 	private MemberVO memberVO;

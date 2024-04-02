@@ -2,6 +2,8 @@ package com.hello.forum.beans;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,9 @@ import jakarta.annotation.PostConstruct;
  */
 @SpringBootConfiguration
 public class CustomBeanInitializer {
+
+	private Logger logger = LoggerFactory
+			.getLogger(CustomBeanInitializer.class);
 
 	/**
 	 * application.yml 파일에 작성된 사용자 환경설정 정보들을 읽어와서 멤버변수로 할당해 둔다.
@@ -40,13 +45,12 @@ public class CustomBeanInitializer {
 	private String fileMimeTypeHandler;
 
 	public CustomBeanInitializer() {
-		System.out.println("CustomBeanInitializer 실행됨!!!");
+		logger.debug("CustomBeanInitializer 실행됨!!!");
 		// 생성자가 실행되는 시점에서는 yml의 값이 할당되지 않는다!
 		// 생성자가 실행되고 난 이후의 시점에서 yml의 값이 할당된다.
-		System.out.println("baseDir: " + baseDir);
-		System.out.println("enableObfuscation: " + enableObfuscation);
-		System.out.println(
-				"enableObfuscationHideExt: " + enableObfuscationHideExt);
+		logger.debug("baseDir: " + baseDir);
+		logger.debug("enableObfuscation: " + enableObfuscation);
+		logger.debug("enableObfuscationHideExt: " + enableObfuscationHideExt);
 	}
 
 	/**
@@ -56,15 +60,14 @@ public class CustomBeanInitializer {
 	 */
 	@PostConstruct
 	public void postContructor() {
-		System.out.println("생성자가 실행된 이후의 시점.");
-		System.out.println("> baseDir: " + baseDir);
-		System.out.println("> enableObfuscation: " + enableObfuscation);
-		System.out.println(
-				"> enableObfuscationHideExt: " + enableObfuscationHideExt);
-		System.out.println("> availableFileList: " + availableFileList);
-		System.out.println("> availableFileList: " + availableFileList.size());
-		System.out.println("> availableFileList: " + availableFileList.get(0));
-		System.out.println("> availableFileList: " + availableFileList.get(1));
+		logger.debug("생성자가 실행된 이후의 시점.");
+		logger.debug("> baseDir: " + baseDir);
+		logger.debug("> enableObfuscation: " + enableObfuscation);
+		logger.debug("> enableObfuscationHideExt: " + enableObfuscationHideExt);
+		logger.debug("> availableFileList: " + availableFileList);
+		logger.debug("> availableFileList: " + availableFileList.size());
+		logger.debug("> availableFileList: " + availableFileList.get(0));
+		logger.debug("> availableFileList: " + availableFileList.get(1));
 	}
 
 	/**
