@@ -425,7 +425,7 @@ public class BoardController {
 	}
 
 	@ResponseBody
-	@PostMapping("/board/excel/write")
+	@PostMapping("/ajax/board/excel/write")
 	public AjaxResponse doExcelUpload(@RequestParam MultipartFile excelFile) {
 
 		boolean isSuccess = this.boardService.createMassiveBoard2(excelFile);

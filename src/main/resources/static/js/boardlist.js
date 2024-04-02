@@ -24,7 +24,7 @@ $().ready(function () {
     // 파일 전송은 $.post로 할 수 없다.
     //$.post();
     $.ajax({
-      url: "/board/excel/write", // 요청을 보낼 주소
+      url: "/ajax/board/excel/write", // 요청을 보낼 주소
       type: "POST", // 요청을 보낼 HttpMethod
       data: formData, // 요청을 보낼 데이터 (FormData)
       processData: false,

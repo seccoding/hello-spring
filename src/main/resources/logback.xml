@@ -19,9 +19,27 @@
 		</rollingPolicy>
 
 		<encoder>
-			<pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
 		</encoder>
 	</appender>
+	
+	<appender name="TIMING_LOG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>C:/logs/hellospring_timing.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>C:/logs/hellospring_timing.%d{yyyy-MM-dd}.log</fileNamePattern>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="timing" level="debug">
+		<appender-ref ref="TIMING_LOG" />
+	</logger>
 
 	<!-- 
 	TRACE > DEBUG > INFO > WARN > ERROR

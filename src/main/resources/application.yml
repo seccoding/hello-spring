@@ -32,7 +32,9 @@ app:
         check-url-pattern: /**
         ignore-url-patterns:
             /member/login,
+            /ajax/member/login,
             /member/regist/**,
+            /ajax/member/regist/**,
             /member/success-delete-me,
             /member/fail-delete-me,
             /board/list,
