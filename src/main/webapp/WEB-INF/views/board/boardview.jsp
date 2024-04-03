@@ -10,7 +10,7 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
       div.grid {
         display: grid;
         grid-template-columns: 80px 1fr;
-        grid-template-rows: repeat(7, 28px) 320px 1fr;
+        grid-template-rows: repeat(7, 28px) 320px 1fr 1fr;
         row-gap: 10px;
       }
     </style>
@@ -44,6 +44,15 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
       <label for="content">내용</label>
       <div>${boardVO.content}</div>
+
+      <div class="replies">
+        <div class="reply-items"></div>
+        <div class="write-reply">
+          <textarea id="txt-reply"></textarea>
+          <button id="btn-save-reply">등록</button>
+          <button id="btn-cancel-reply">취소</button>
+        </div>
+      </div>
 
       <c:if test="${sessionScope._LOGIN_USER_.email eq boardVO.email}">
         <div class="btn-group">

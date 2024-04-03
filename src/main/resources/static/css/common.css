@@ -106,3 +106,34 @@ ul.horizontal-list {
 ul.horizontal-list li {
   display: inline;
 }
+
+/***************댓글 스타일 시작*****************/
+div.replies {
+  grid-column: 1 / 3;
+  font-size: 17px;
+}
+
+div.replies > .write-reply {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  grid-template-rows: 1fr 40px;
+  gap: 10px;
+  align-items: center;
+}
+
+div.replies > .write-reply > textarea {
+  height: 150px;
+  grid-column: 1 / 3;
+}
+
+div.replies > .reply-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  row-gap: 10px;
+}
+
+pre.content {
+  margin: 0px;
+}
