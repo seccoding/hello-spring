@@ -56,7 +56,7 @@ public class ReplyServiceImpl implements ReplyService {
 	public boolean recommendOneReply(int replyId, String email) {
 		ReplyVO replyVO = this.replyDao.getOneReply(replyId);
 
-		if (!email.equals(replyVO.getEmail())) {
+		if (email.equals(replyVO.getEmail())) {
 			throw new PageNotFoundException();
 		}
 

@@ -68,9 +68,8 @@ $().ready(function () {
   };
 
   var loadReplies = function (boardId) {
-    $(".reply-items").html("");
-
     $.get("/ajax/board/reply/" + boardId, function (response) {
+      $(".reply-items").html("");
       var count = response.data.count;
       var replies = response.data.replies;
 
@@ -222,6 +221,10 @@ $().ready(function () {
         url = "/ajax/board/reply/modify/" + target;
       }
     }
+
+    $("#txt-reply").removeData("mode");
+    $("#txt-reply").removeData("target");
+
     $.post(url, body, function (response) {
       var result = response.data.result;
       if (result) {
