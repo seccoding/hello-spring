@@ -25,11 +25,13 @@ public class ReplyController {
 	public AjaxResponse getAllReplies(@PathVariable int boardId,
 			SearchReplyVO searchReplyVO) {
 		searchReplyVO.setBoardId(boardId);
-
 		List<ReplyVO> replyList = this.replyService
 				.getAllReplies(searchReplyVO);
+
+		searchReplyVO.setPageCount(replyList.size());
+
 		return new AjaxResponse().append("count", replyList.size())
-				.append("replies", replyList);
+				.append("replies", replyList).append("paginate", searchReplyVO);
 	}
 
 	@PostMapping("/ajax/board/reply/{boardId}")

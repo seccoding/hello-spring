@@ -1,5 +1,5 @@
 $().ready(function () {
-  var pageNo = 0;
+  var pageNumber = 0;
   $(document).on("scroll", function () {
     var scrollHeight = $(window).scrollTop();
     var documentHeight = $(document).height();
@@ -8,8 +8,7 @@ $().ready(function () {
 
     var willFetchReply = scrollBottomPoint > documentHeight;
     if (willFetchReply) {
-      pageNo++;
-      loadReplies(boardId, pageNo);
+      loadReplies(boardId, pageNumber);
       console.log("댓글을 10개만 더 불러옵니다.");
     }
   });
@@ -91,31 +90,81 @@ $().ready(function () {
 
     $.get("/ajax/board/reply/" + boardId, params, function (response) {
       if (!isNotUndefinedPageNo) {
-        $(".reply-items").html("");
+        //$(".reply-items").html("");
+        pageNumber = response.data.paginate.pageCount - 1;
       }
 
       var count = response.data.count;
       var replies = response.data.replies;
 
+      if (isNotUndefinedPageNo && count == response.data.paginate.listSize) {
+        pageNumber++;
+      }
+
       for (var i in replies) {
         var reply = replies[i];
 
+        /***********************이미 불러온 댓글 수정*************************/
+        // 이미 불러온 댓글인지 확인
+        var appendedReply = $(".reply[data-reply-id=" + reply.replyId + "]");
+        var isAppendedReply = appendedReply.length > 0;
+        // 이미 불러온 댓글이며, 삭제가 안된 댓글일 경우
+        if (isAppendedReply && reply.delYn === "N") {
+          appendedReply.find(".content").text(reply.content);
+          appendedReply
+            .find(".recommend-count")
+            .text("추천수: " + reply.recommendCnt);
+          var modifyDate = appendedReply.find(".mdfydt");
+          if (modifyDate) {
+            modifyDate.text("(수정: " + reply.mdfyDt + ")");
+          } else {
+            var mdfyDtDom = $("<span></span>");
+            mdfyDtDom.addClass("mdfydt");
+            mdfyDtDom.text("(수정: " + reply.mdfyDt + ")");
+            appendedReply.find(".datetime").append(mdfyDtDom);
+          }
+          continue;
+        }
+        // 이미 불러온 댓글인데, 삭제가 된 댓글일 경우
+        else if (isAppendedReply && reply.delYn === "Y") {
+          appendedReply.text("삭제된 댓글입니다.");
+          appendedReply.css({
+            color: "#F33",
+          });
+          continue;
+        }
+        // 이미 불러온 댓글인데, 탈퇴한 회원이 작성한 댓글일 경우
+        else if (isAppendedReply && reply.memberVO.delYn === "Y") {
+          appendedReply.text("탈퇴한 회원의 댓글입니다.");
+          appendedReply.css({
+            color: "#F33",
+          });
+          continue;
+        }
+
+        var appendedParentReply = $(
+          ".reply[data-reply-id=" + reply.parentReplyId + "]"
+        );
+
+        /***********************새로운 댓글 추가*************************/
         // <div class="reply" data-reply-id="댓글번호" style="padding-left: (level - 1) * 40px">
         var replyDom = $("<div></div>");
         replyDom.addClass("reply");
+        replyDom.attr("data-reply-id", reply.replyId);
         replyDom.data("reply-id", reply.replyId);
         replyDom.css({
-          "padding-left": (reply.level - 1) * 40 + "px",
+          "padding-left": (reply.level === 1 ? 0 : 1) * 40 + "px",
+          color: "#333",
         });
 
         if (reply.delYn === "Y") {
           replyDom.css({
-            "background-color": "#F003",
+            color: "#F33",
           });
           replyDom.text("삭제된 댓글입니다.");
         } else if (reply.memberVO.delYn === "Y") {
           replyDom.css({
-            "background-color": "#F003",
+            color: "#F33",
           });
           replyDom.text("탈퇴한 회원의 댓글입니다.");
         } else {
@@ -201,7 +250,15 @@ $().ready(function () {
 
           replyDom.append(controlDom);
         }
-        $(".reply-items").append(replyDom);
+
+        // 일반 댓글은 reply-items의 자식으로 추가한다.
+        if (!appendedParentReply.length > 0) {
+          $(".reply-items").append(replyDom);
+        }
+        // 대댓글은 원 댓글의 자식으로 추가한다.
+        else {
+          appendedParentReply.append(replyDom);
+        }
         /*
         <div class="reply" data-reply-id="댓글번호" style="padding-left: (level - 1) * 40px">
           <div class="author">사용자명 (사용자이메일)</div>
