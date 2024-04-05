@@ -9,6 +9,6 @@ pageEncoding="UTF-8"%>
   </head>
   <body>
     <h3>${message}</h3>
-    <a href="/board/list">게시글 목록으로 가기</a>
+    <a href="/board/search">게시글 목록으로 가기</a>
   </body>
 </html>

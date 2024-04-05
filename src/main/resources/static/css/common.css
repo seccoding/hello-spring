@@ -32,7 +32,8 @@ label {
 
 button,
 input,
-textarea {
+textarea,
+select {
   padding: 10px;
   border: 1px solid #ccc;
 }
@@ -136,4 +137,44 @@ div.replies > .reply-items {
 
 pre.content {
   margin: 0px;
+}
+
+/*****************Pagination Style 시작********************/
+ul.page-nav {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+ul.page-nav > li {
+  display: inline-block;
+  padding: 10px;
+  color: #333;
+}
+
+ul.page-nav > li.active > a {
+  color: #f00;
+  font-weight: bold;
+}
+
+/******************검색 부분********************/
+
+form#search-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+form#search-form > ul.page-nav {
+  flex-grow: 1;
+}
+
+form#search-form > * {
+  margin-right: 0.5rem;
+  white-space: nowrap;
+}
+
+form#search-form > *:last-child {
+  margin-right: 0;
 }

@@ -6,3 +6,11 @@ $().ready(function () {
     });
   });
 });
+
+function search(pageNo) {
+  var searchForm = $("#search-form");
+  //var listSize = $("#list-size");
+  $("#page-no").val(pageNo);
+
+  searchForm.attr("method", "get").submit();
+}

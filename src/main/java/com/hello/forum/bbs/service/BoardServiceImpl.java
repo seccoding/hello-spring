@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hello.forum.bbs.dao.BoardDao;
 import com.hello.forum.bbs.vo.BoardListVO;
 import com.hello.forum.bbs.vo.BoardVO;
+import com.hello.forum.bbs.vo.SearchBoardVO;
 import com.hello.forum.beans.FileHandler;
 import com.hello.forum.beans.FileHandler.StoredFile;
 import com.hello.forum.exceptions.PageNotFoundException;
@@ -71,6 +72,20 @@ public class BoardServiceImpl implements BoardService {
 
 		// BoardDaoImpl의 getAllBoard를 이용해서 게시글의 목록을 알고싶다!
 		List<BoardVO> boardList = this.boardDao.getAllBoard();
+
+		BoardListVO boardListVO = new BoardListVO();
+		boardListVO.setBoardCnt(boardCount);
+		boardListVO.setBoardList(boardList);
+
+		return boardListVO;
+	}
+
+	@Override
+	public BoardListVO searchAllBoard(SearchBoardVO searchBoardVO) {
+		int boardCount = this.boardDao.getBoardAllCount();
+		searchBoardVO.setPageCount(boardCount);
+
+		List<BoardVO> boardList = this.boardDao.searchAllBoard(searchBoardVO);
 
 		BoardListVO boardListVO = new BoardListVO();
 		boardListVO.setBoardCnt(boardCount);

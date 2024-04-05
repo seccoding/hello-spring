@@ -10,7 +10,7 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
       div.grid {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 28px 28px 1fr 28px;
+        grid-template-rows: 28px 28px 1fr auto 28px;
         row-gap: 10px;
       }
     </style>
@@ -89,6 +89,70 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
           </c:choose>
         </tbody>
       </table>
+
+      <!-- Paginator 시작 -->
+      <div>
+        <form id="search-form">
+          <input type="hidden" id="page-no" name="pageNo" />
+          <select id="list-size" name="listSize">
+            <option value="10" ${searchBoardVO.listSize eq 10 ? 'selected' : ''}>10개</option>
+            <option value="20" ${searchBoardVO.listSize eq 20 ? 'selected' : ''}>20개</option>
+            <option value="30" ${searchBoardVO.listSize eq 30 ? 'selected' : ''}>30개</option>
+            <option value="50" ${searchBoardVO.listSize eq 50 ? 'selected' : ''}>50개</option>
+            <option value="100" ${searchBoardVO.listSize eq 100 ? 'selected' : ''}>100개</option>
+          </select>
+
+          <select id="search-type" name="searchType">
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+            <option value="title_content">제목 + 내용</option>
+            <option value="email">작성자</option>
+          </select>
+
+          <input type="text" name="searchKeyword" />
+          <button type="button" id="search-btn">검색</button>
+
+          <ul class="page-nav">
+            <c:if test="${searchBoardVO.hasPrevGroup}">
+              <li><a href="javascript:search(0);">처음</a></li>
+              <li>
+                <a
+                  href="javascript:search(${searchBoardVO.prevGroupStartPageNo});"
+                  >이전</a
+                >
+              </li>
+            </c:if>
+
+            <!-- Page 번호를 반복하며 노출한다. -->
+            <c:forEach
+              begin="${searchBoardVO.groupStartPageNo}"
+              end="${searchBoardVO.groupEndPageNo}"
+              step="1"
+              var="p"
+            >
+              <li class="${searchBoardVO.pageNo eq p ? 'active' : ''}">
+                <a href="javascript:search(${p});">${p+1}</a>
+              </li>
+            </c:forEach>
+
+            <c:if test="${searchBoardVO.hasNextGroup}">
+              <li>
+                <a
+                  href="javascript:search(${searchBoardVO.nextGroupStartPageNo});"
+                  >다음</a
+                >
+              </li>
+              <li>
+                <a href="javascript:search(${searchBoardVO.pageCount - 1});"
+                  >마지막</a
+                >
+              </li>
+            </c:if>
+          </ul>
+        </form>
+      </div>
+      <!-- Paginator 끝 -->
+
       <c:if test="${not empty sessionScope._LOGIN_USER_}">
         <div class="right-align">
           <a href="/board/excel/download2">엑셀 다운로드</a>
