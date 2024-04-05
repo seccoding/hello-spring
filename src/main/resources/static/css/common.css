@@ -42,10 +42,24 @@ input[type="file"] {
   padding: 0;
 }
 
+button {
+  background-color: #6ea8ff;
+}
+
+button:hover {
+  background-color: #6ea8ff33;
+}
+
 button:focus,
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: none;
+  background-color: #f3f3f3;
+}
+
+select:focus option {
+  background-color: #fff;
 }
 
 a:active,
