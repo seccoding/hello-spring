@@ -7,6 +7,10 @@ $().ready(function () {
     search(0);
   });
 
+  $("#cancel-search-btn").on("click", function () {
+    location.href = "/board/search";
+  });
+
   $("#uploadExcelfile").on("click", function () {
     $("#excelfile").click();
   });

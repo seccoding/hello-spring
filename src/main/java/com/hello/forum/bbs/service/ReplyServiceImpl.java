@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hello.forum.bbs.dao.ReplyDao;
 import com.hello.forum.bbs.vo.ReplyVO;
+import com.hello.forum.bbs.vo.SearchReplyVO;
 import com.hello.forum.exceptions.PageNotFoundException;
 
 @Service
@@ -17,8 +18,8 @@ public class ReplyServiceImpl implements ReplyService {
 	private ReplyDao replyDao;
 
 	@Override
-	public List<ReplyVO> getAllReplies(int boardId) {
-		return this.replyDao.getAllReplies(boardId);
+	public List<ReplyVO> getAllReplies(SearchReplyVO searchReplyVO) {
+		return this.replyDao.getAllReplies(searchReplyVO);
 	}
 
 	@Transactional

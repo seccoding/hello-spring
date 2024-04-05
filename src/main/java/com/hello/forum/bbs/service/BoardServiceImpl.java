@@ -82,7 +82,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public BoardListVO searchAllBoard(SearchBoardVO searchBoardVO) {
-		int boardCount = this.boardDao.getBoardAllCount();
+		int boardCount = this.boardDao.searchBoardAllCount(searchBoardVO);
 		searchBoardVO.setPageCount(boardCount);
 
 		List<BoardVO> boardList = this.boardDao.searchAllBoard(searchBoardVO);

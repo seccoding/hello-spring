@@ -93,7 +93,7 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
       <!-- Paginator 시작 -->
       <div>
         <form id="search-form">
-          <input type="hidden" id="page-no" name="pageNo" />
+          <input type="hidden" id="page-no" name="pageNo" value="0" />
           <select id="list-size" name="listSize">
             <option value="10" ${searchBoardVO.listSize eq 10 ? 'selected' : ''}>10개</option>
             <option value="20" ${searchBoardVO.listSize eq 20 ? 'selected' : ''}>20개</option>
@@ -103,14 +103,15 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
           </select>
 
           <select id="search-type" name="searchType">
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-            <option value="title_content">제목 + 내용</option>
-            <option value="email">작성자</option>
+            <option value="title" ${searchBoardVO.searchType eq 'title' ? 'selected' : ''}>제목</option>
+            <option value="content" ${searchBoardVO.searchType eq 'content' ? 'selected' : ''}>내용</option>
+            <option value="title_content" ${searchBoardVO.searchType eq 'title_content' ? 'selected' : ''}>제목 + 내용</option>
+            <option value="email" ${searchBoardVO.searchType eq 'email' ? 'selected' : ''}>작성자</option>
           </select>
 
-          <input type="text" name="searchKeyword" />
+          <input type="text" name="searchKeyword" value="${searchBoardVO.searchKeyword}" />
           <button type="button" id="search-btn">검색</button>
+          <button type="button" id="cancel-search-btn">초기화</button>
 
           <ul class="page-nav">
             <c:if test="${searchBoardVO.hasPrevGroup}">

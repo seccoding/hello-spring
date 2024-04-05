@@ -17,8 +17,11 @@
   	</resultMap>
   
 	<select id="getAllReplies" 
-			parameterType="_int" 
+			parameterType="com.hello.forum.bbs.vo.SearchReplyVO" 
 			resultMap="replyVOMap">
+		<if test="pageNo >= 0">
+			<include refid="Common.pagenate_header" />
+		</if>
 		 SELECT LEVEL
 		 	  , R.REPLY_ID 
 		 	  , R.BOARD_ID 
@@ -37,8 +40,11 @@
 		  INNER JOIN MEMBERS M
 		     ON R.EMAIL = M.EMAIL
 		  START WITH R.PARENT_REPLY_ID = 0
-		    AND R.BOARD_ID = #{_parameter}
-		CONNECT BY PRIOR R.REPLY_ID = R.PARENT_REPLY_ID  
+		    AND R.BOARD_ID = #{boardId}
+		CONNECT BY PRIOR R.REPLY_ID = R.PARENT_REPLY_ID
+		<if test="pageNo >= 0">
+			<include refid="Common.pagenate_footer" />
+		</if>
 	</select>
 
 	<select id="getOneReply" 
