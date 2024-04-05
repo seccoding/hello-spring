@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -24,11 +23,8 @@ public class ReplyController {
 
 	@GetMapping("/ajax/board/reply/{boardId}")
 	public AjaxResponse getAllReplies(@PathVariable int boardId,
-			@RequestParam int pageNo) {
-
-		SearchReplyVO searchReplyVO = new SearchReplyVO();
+			SearchReplyVO searchReplyVO) {
 		searchReplyVO.setBoardId(boardId);
-		searchReplyVO.setPageNo(pageNo);
 
 		List<ReplyVO> replyList = this.replyService
 				.getAllReplies(searchReplyVO);
