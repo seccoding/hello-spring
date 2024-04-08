@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.forum.bbs.dao.BoardDao">
+  
+  	<resultMap type="com.hello.forum.bbs.vo.BoardVO" 
+  	           id="boardVOMap"
+  	           autoMapping="true">
+		<id column="ID" property="id" />
+		<association property="memberVO"
+					 javaType="com.hello.forum.member.vo.MemberVO">
+			<id column="EMAIL" property="email" />
+			<result column="NAME" property="name" />
+		</association>
+	</resultMap>
+  
+  	<!-- <resultMap type="com.hello.forum.bbs.vo.BoardVO" 
+  	           id="boardVOMap">
+		<id column="ID" property="id" />
+		<result column="SUBJECT" property="subject" />
+		<result column="CONTENT" property="content" />
+		<result column="EMAIL" property="email" />
+		<result column="VIEW_CNT" property="viewCnt" />
+		<result column="CRT_DT" property="crtDt" />
+		<result column="MDFY_DT" property="mdfyDt" />
+		<result column="FILE_NAME" property="fileName" />
+		<result column="ORIGIN_FILE_NAME" property="originFileName" />
+		<result column="DEL_YN" property="delYn" />
+		<association property="memberVO"
+					 javaType="com.hello.forum.member.vo.MemberVO">
+			<id column="EMAIL" property="email" />
+			<result column="NAME" property="name" />
+		</association>
+	</resultMap> -->
+  
+	<select id="getBoardAllCount" resultType="_int">
+		SELECT COUNT(1) 
+		  FROM BOARD B
+		 INNER JOIN MEMBERS M
+		    ON M.EMAIL = B.EMAIL
+		 WHERE B.DEL_YN = 'N'
+		   AND M.DEL_YN = 'N'
+	</select>
+	
+	<select id="searchBoardAllCount" 
+			parameterType="com.hello.forum.bbs.vo.SearchBoardVO" 
+			resultType="_int">
+		SELECT COUNT(1) 
+		  FROM BOARD B
+		 INNER JOIN MEMBERS M
+		    ON M.EMAIL = B.EMAIL
+		 WHERE B.DEL_YN = 'N'
+		   AND M.DEL_YN = 'N'
+		<if test='searchKeyword != null and searchKeyword != ""'>
+			<choose>
+				<when test='searchType == "title"'>
+		   AND B.SUBJECT LIKE '%' ||  #{searchKeyword} || '%'
+				</when>
+				<when test='searchType == "content"'>
+		   AND B.CONTENT LIKE '%' ||  #{searchKeyword} || '%'
+				</when>
+				<when test='searchType == "title_content"'>
+		   AND (B.SUBJECT LIKE '%' ||  #{searchKeyword} || '%'
+		    OR  B.CONTENT LIKE '%' ||  #{searchKeyword} || '%')
+				</when>
+				<when test='searchType == "email"'>
+		   AND B.EMAIL LIKE '%' ||  #{searchKeyword} || '%'
+				</when>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="getAllBoard" resultMap="boardVOMap">
+		SELECT B.ID
+			 , B.SUBJECT
+			 , B.CONTENT
+			 , B.EMAIL
+			 , B.VIEW_CNT
+			 , TO_CHAR(B.CRT_DT, 'YYYY-MM-DD') CRT_DT
+			 , TO_CHAR(B.MDFY_DT, 'YYYY-MM-DD') MDFY_DT
+			 , B.FILE_NAME
+			 , B.ORIGIN_FILE_NAME
+			 , B.DEL_YN
+			 , M.NAME 
+		  FROM BOARD B
+		 INNER JOIN MEMBERS M
+		    ON M.EMAIL = B.EMAIL
+		 WHERE B.DEL_YN = 'N'
+		   AND M.DEL_YN = 'N'
+		 ORDER BY B.ID DESC
+	</select>
+	
+	<select id="searchAllBoard" 
+			parameterType="com.hello.forum.bbs.vo.SearchBoardVO" 
+			resultMap="boardVOMap">
+		<include refid="Common.pagenate_header" />
+		SELECT B.ID
+			 , B.SUBJECT
+			 , B.CONTENT
+			 , B.EMAIL
+			 , B.VIEW_CNT
+			 , TO_CHAR(B.CRT_DT, 'YYYY-MM-DD') CRT_DT
+			 , TO_CHAR(B.MDFY_DT, 'YYYY-MM-DD') MDFY_DT
+			 , B.FILE_NAME
+			 , B.ORIGIN_FILE_NAME
+			 , B.DEL_YN
+			 , M.NAME 
+		  FROM BOARD B
+		 INNER JOIN MEMBERS M
+		    ON M.EMAIL = B.EMAIL
+		 WHERE B.DEL_YN = 'N'
+		   AND M.DEL_YN = 'N'
+		<if test='searchKeyword != null and searchKeyword != ""'>
+			<choose>
+				<when test='searchType == "title"'>
+		   AND B.SUBJECT LIKE '%' ||  #{searchKeyword} || '%'
+				</when>
+				<when test='searchType == "content"'>
+		   AND B.CONTENT LIKE '%' ||  #{searchKeyword} || '%'
+				</when>
+				<when test='searchType == "title_content"'>
+		   AND (B.SUBJECT LIKE '%' ||  #{searchKeyword} || '%'
+		    OR  B.CONTENT LIKE '%' ||  #{searchKeyword} || '%')
+				</when>
+				<when test='searchType == "email"'>
+		   AND B.EMAIL LIKE '%' ||  #{searchKeyword} || '%'
+				</when>
+			</choose>
+		</if>
+		 ORDER BY B.ID DESC
+		<include refid="Common.pagenate_footer" />
+	</select>
+	
+	<!-- Insert 쿼리에는 resultType을 작성하지 않는다! -->
+	<insert id="insertNewBoard" 
+	        parameterType="com.hello.forum.bbs.vo.BoardVO">
+	    INSERT INTO BOARD
+		 (ID
+		, SUBJECT
+		, CONTENT
+		, EMAIL
+		, VIEW_CNT
+		, CRT_DT
+		, MDFY_DT
+		, FILE_NAME
+		, ORIGIN_FILE_NAME
+		, DEL_YN)
+		VALUES
+		 (SEQ_BOARD_PK.NEXTVAL
+		, #{subject} /*파라미터(BoardVO)의 getSubject()의 결과*/
+		, #{content} /*파라미터(BoardVO)의 getContent()의 결과*/
+		, #{email} /*파라미터(BoardVO)의 getEmail()의 결과*/
+		, 0
+		, SYSDATE
+		, NULL
+		, #{fileName} /*파라미터(BoardVO)의 getFileName()의 결과*/
+		, #{originFileName} /*파라미터(BoardVO)의 getOriginFileName()의 결과*/
+		, 'N')
+	</insert>
+  
+	<select id="selectOneBoard"
+	        parameterType="_int"
+	        resultMap="boardVOMap">
+	    SELECT B.ID
+			 , B.SUBJECT
+			 , B.CONTENT
+			 , B.EMAIL
+			 , B.VIEW_CNT
+			 , TO_CHAR(B.CRT_DT, 'YYYY-MM-DD') CRT_DT
+			 , TO_CHAR(B.MDFY_DT, 'YYYY-MM-DD') MDFY_DT
+			 , B.FILE_NAME
+			 , B.ORIGIN_FILE_NAME
+			 , B.DEL_YN
+			 , M.NAME 
+		  FROM BOARD B
+		 INNER JOIN MEMBERS M
+		    ON M.EMAIL = B.EMAIL
+		 WHERE B.DEL_YN = 'N'
+		   AND M.DEL_YN = 'N'
+		   AND B.ID = #{_parameter}
+	</select>
+	
+	<update id="increaseViewCount"
+	        parameterType="_int">
+	    UPDATE BOARD
+		   SET VIEW_CNT = VIEW_CNT + 1
+		 WHERE DEL_YN = 'N'
+		   AND ID = #{_parameter}
+	</update>
+  
+  	<update id="updateOneBoard"
+  	        parameterType="com.hello.forum.bbs.vo.BoardVO">
+  	    UPDATE BOARD
+		   SET SUBJECT = #{subject}
+		     , CONTENT = #{content}
+		     , MDFY_DT = SYSDATE
+		     <if test='fileName != null and fileName != ""'>
+		     , FILE_NAME = #{fileName}
+		     , ORIGIN_FILE_NAME = #{originFileName}
+		     </if>
+		 WHERE ID = #{id}
+  	</update>
+  
+  	<update id="deleteOneBoard"
+  	        parameterType="_int">
+  	    UPDATE BOARD
+		   SET DEL_YN = 'Y'
+		     , MDFY_DT = SYSDATE
+		 WHERE ID = #{_parameter}
+  	</update>
+  
+</mapper>
+
+
+
+
+
+
+
+
