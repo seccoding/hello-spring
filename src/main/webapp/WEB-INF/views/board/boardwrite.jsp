@@ -24,7 +24,7 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
       </dialog>
     </c:if>
 
-    <jsp:include page="../member/membermenu.jsp"></jsp:include>
+    <jsp:include page="../layout/layout.jsp" />
 
     <h1>게시글 작성</h1>
     <form action="/board/write" method="post" enctype="multipart/form-data">
@@ -52,5 +52,6 @@ ${boardVO.content}</textarea
         </div>
       </div>
     </form>
+    <jsp:include page="../layout/layout_close.jsp" />
   </body>
 </html>

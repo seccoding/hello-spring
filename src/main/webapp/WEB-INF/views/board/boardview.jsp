@@ -17,7 +17,7 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
     <script type="text/javascript" src="/js/boardview.js"></script>
   </head>
   <body>
-    <jsp:include page="../member/membermenu.jsp"></jsp:include>
+    <jsp:include page="../layout/layout.jsp" />
     <h1>게시글 조회</h1>
     <div class="grid" data-id="${boardVO.id}">
       <label for="subject">제목</label>
@@ -76,5 +76,6 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
         </div>
       </c:if>
     </div>
+    <jsp:include page="../layout/layout_close.jsp" />
   </body>
 </html>
