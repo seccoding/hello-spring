@@ -2,6 +2,24 @@
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+}
+
+#layout {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: 100px 1fr;
+  gap: 10px;
+}
+
+#header {
+  grid-column: 1 / -1;
+}
+
+#aside {
+}
+
 div.grid > div.btn-group {
   grid-column: 1 / -1;
 }

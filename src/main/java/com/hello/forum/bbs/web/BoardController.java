@@ -214,7 +214,8 @@ public class BoardController {
 		// 1. 전달받은 id의 값으로 게시글을 조회한다.
 		BoardVO boardVO = this.boardService.getOneBoard(id, false);
 
-		if (!memberVO.getEmail().equals(boardVO.getEmail())) {
+		if (!memberVO.getEmail().equals(boardVO.getEmail())
+				&& memberVO.getAdminYn().equals("N")) {
 			throw new PageNotFoundException();
 		}
 
@@ -238,7 +239,8 @@ public class BoardController {
 			@SessionAttribute("_LOGIN_USER_") MemberVO memberVO) {
 
 		BoardVO originalBoardVO = this.boardService.getOneBoard(id, false);
-		if (!originalBoardVO.getEmail().equals(memberVO.getEmail())) {
+		if (!originalBoardVO.getEmail().equals(memberVO.getEmail())
+				&& memberVO.getAdminYn().equals("N")) {
 			throw new PageNotFoundException();
 		}
 
@@ -294,7 +296,8 @@ public class BoardController {
 			@SessionAttribute("_LOGIN_USER_") MemberVO memberVO) {
 
 		BoardVO originalBoardVO = this.boardService.getOneBoard(id, false);
-		if (!originalBoardVO.getEmail().equals(memberVO.getEmail())) {
+		if (!originalBoardVO.getEmail().equals(memberVO.getEmail())
+				&& memberVO.getAdminYn().equals("N")) {
 			throw new PageNotFoundException();
 		}
 
@@ -307,6 +310,21 @@ public class BoardController {
 		}
 
 		return "redirect:/board/list";
+	}
+
+	@ResponseBody
+	@PostMapping("/ajax/board/delete/massive")
+	public AjaxResponse doDeleteMassive(
+			@RequestParam("deleteItems[]") List<Integer> deleteItems,
+			@SessionAttribute("_LOGIN_USER_") MemberVO memberVO) {
+
+		if (memberVO.getAdminYn().equals("N")) {
+			throw new PageNotFoundException();
+		}
+
+		boolean deleteResult = this.boardService.deleteManyBoard(deleteItems);
+
+		return new AjaxResponse().append("result", deleteResult);
 	}
 
 	@GetMapping("/board/file/download/{id}")

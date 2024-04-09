@@ -1,5 +1,7 @@
 package com.hello.forum.bbs.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hello.forum.bbs.vo.BoardListVO;
@@ -68,5 +70,7 @@ public interface BoardService {
 	 * @return
 	 */
 	public boolean createMassiveBoard2(MultipartFile excelFile);
+
+	public boolean deleteManyBoard(List<Integer> deleteItems);
 
 }

@@ -1,4 +1,28 @@
 $().ready(function () {
+  $("#deleteMassiveBoard").on("click", function () {
+    // 선택된 체크박스만 가져온다.
+    var checkedItems = $(".target-board-id:checked");
+
+    // 선택된 체크박스만 반복하며 서버로 보낼 파라미터를 생성한다.
+    var itemsArray = [];
+    checkedItems.each(function (index, data) {
+      itemsArray.push($(data).val());
+    });
+
+    // 서버로 전송한다 (ajax)
+    $.post(
+      "/ajax/board/delete/massive",
+      { deleteItems: itemsArray },
+      function (response) {
+        var result = response.data.result;
+        if (result) {
+          // 삭제가 완료되면 현재페이지를 새로고침한다.
+          location.reload();
+        }
+      }
+    );
+  });
+
   $("#list-size").on("change", function () {
     search(0);
   });

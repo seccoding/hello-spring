@@ -8,6 +8,7 @@ public class MemberVO {
 	private String delYn;
 	private String confirmPassword;
 	private String salt;
+	private String adminYn;
 
 	public String getEmail() {
 		return email;
@@ -55,6 +56,14 @@ public class MemberVO {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public String getAdminYn() {
+		return adminYn;
+	}
+
+	public void setAdminYn(String adminYn) {
+		this.adminYn = adminYn;
 	}
 
 }

@@ -32,6 +32,63 @@ $(document).on("ajaxComplete", function () {
 });
 
 $().ready(function () {
+  var aside = $("#aside");
+
+  if (aside && aside.length > 0) {
+    $.get("/ajax/menu/list", function (response) {
+      var menuList = response.data.menu;
+
+      var menuListDom = $("<ul></ul>");
+      menuListDom.css({ "list-style-type": "none", padding: 0 });
+
+      for (var i in menuList) {
+        var menu = menuList[i];
+
+        var menuId = menu.menuId;
+        var parentMenuId = menu.parentMenuId;
+        var menuUrl = menu.menuUrl;
+
+        var menuDom = $("<li></li>");
+        menuDom.data("menu-id", menuId);
+        menuDom.css({ "font-weight": "bold", cursor: "pointer" });
+        menuDom.data("url", menuUrl);
+        menuDom.data("parent-menu-id", parentMenuId);
+
+        if (parentMenuId) {
+          menuDom.css({
+            "font-weight": "normal",
+            "padding-left": "1rem",
+          });
+        }
+
+        menuDom.text(menu.menuName);
+
+        menuDom.on("click", function () {
+          var url = $(this).data("url");
+
+          if (url) {
+            location.href = $(this).data("url");
+          }
+        });
+
+        menuListDom.append(menuDom);
+      }
+
+      aside.append(menuListDom);
+    });
+  }
+
+  $("#checked-all").on("change", function () {
+    // 영향을 받을 다른 체크박스를 조회한다.
+    var targetClass = $(this).data("target-class");
+
+    // checked-all의 체크 상태를 가져온다.
+    // 체크가 되어있다면 true, 아니라면 false
+    var isChecked = $(this).prop("checked");
+
+    $("." + targetClass).prop("checked", isChecked);
+  });
+
   $("a.deleteMe").on("click", function () {
     $.get("/ajax/member/delete-me", function (response) {
       var next = response.data.next;

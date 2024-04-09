@@ -59,7 +59,9 @@ pageEncoding="UTF-8"%> <%@ taglib prefix="c" uri="jakarta.tags.core" %>
         </div>
       </div>
 
-      <c:if test="${sessionScope._LOGIN_USER_.email eq boardVO.email}">
+      <c:if
+        test="${sessionScope._LOGIN_USER_.email eq boardVO.email || sessionScope._LOGIN_USER_.adminYn eq 'Y'}"
+      >
         <div class="btn-group">
           <div class="right-align">
             <a href="/board/modify/${boardVO.id}">수정</a>

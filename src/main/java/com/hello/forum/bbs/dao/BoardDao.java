@@ -73,4 +73,8 @@ public interface BoardDao {
 	 */
 	public int deleteOneBoard(int id);
 
+	public List<BoardVO> selectManyBoard(List<Integer> deleteItems);
+
+	public int deleteManyBoard(List<Integer> deleteItems);
+
 }

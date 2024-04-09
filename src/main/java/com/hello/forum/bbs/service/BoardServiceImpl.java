@@ -202,6 +202,32 @@ public class BoardServiceImpl implements BoardService {
 
 	@Transactional
 	@Override
+	public boolean deleteManyBoard(List<Integer> deleteItems) {
+
+		List<BoardVO> originalBoardList = this.boardDao
+				.selectManyBoard(deleteItems);
+
+		// 첨부파일이 존재하는 게시글이라면 첨부파일을 삭제하는 코드.
+		for (BoardVO boardVO : originalBoardList) {
+			if (boardVO != null) {
+				// 기존 게시글에 첨부된 파일의 이름을 받아온다.
+				String storedFileName = boardVO.getFileName();
+				// 첨부된 파일의 이름이 있는지 확인한다.
+				// 만약, 첨부된 파일의 이름이 있다면, 이 게시글은 파일이 첨부되었던 게시글이다.
+				if (storedFileName != null && storedFileName.length() > 0) {
+					// 첨부된 파일을 삭제한다.
+					this.fileHandler.deleteFileByFileName(storedFileName);
+				}
+			}
+		}
+
+		int deletedCount = this.boardDao.deleteManyBoard(deleteItems);
+
+		return deletedCount > 0;
+	}
+
+	@Transactional
+	@Override
 	public boolean createMassiveBoard(MultipartFile excelFile) {
 
 		int insertedCount = 0;

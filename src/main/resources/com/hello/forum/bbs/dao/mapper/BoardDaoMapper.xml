@@ -210,7 +210,34 @@
 		 WHERE ID = #{_parameter}
   	</update>
   
+  	<select id="selectManyBoard" 
+  			parameterType="list" 
+  			resultType="com.hello.forum.bbs.vo.BoardVO">
+  		SELECT FILE_NAME
+  		  FROM BOARD
+  		 WHERE ID IN 
+  		<foreach collection="list" item="id" open="(" close=")" separator=", ">
+  			#{id}
+  		</foreach>
+  	</select>
+  	
+  	<update id="deleteManyBoard" 
+  			parameterType="list">
+  		UPDATE BOARD
+  		   SET DEL_YN = 'Y'
+  		     , MDFY_DT = SYSDATE
+  		  WHERE ID IN 
+  		<foreach collection="list" item="id" open="(" close=")" separator=", ">
+  			#{id}
+  		</foreach>
+  	</update>
+  	
 </mapper>
+
+
+
+
+
 
 
 

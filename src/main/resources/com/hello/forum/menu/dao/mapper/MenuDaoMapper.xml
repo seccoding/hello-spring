@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.forum.menu.dao.MenuDao">
+  
+  	<select id="selectAllMenu"
+  			parameterType="com.hello.forum.menu.vo.MenuVO">
+  		 SELECT MENU_ID
+              , MENU_NAME
+              , ROLE
+              , MENU_URL
+              , DEL_YN
+              , PARENT_MENU_ID
+		   FROM MENU
+		  START WITH PARENT_MENU_ID IS NULL
+		CONNECT BY PRIOR MENU_ID = PARENT_MENU_ID
+  	</select>
+</mapper>
+
+
+
+
+
+
+
+
