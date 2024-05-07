@@ -22,10 +22,14 @@ public interface MemberDao {
 	 */
 	public int createNewMember(MemberVO memberVO);
 
-	public String selectSalt(String email);
-
-	public MemberVO selectMemberByEmailAndPassword(MemberVO memberVO);
-
 	public int deleteMemberByEmail(String email);
+
+	/**
+	 * Spring Security에서 사용할 회원 정보 조회 기능.
+	 * 
+	 * @param email 로그인 이메일
+	 * @return 로그인 이메일과 일치하는 사용자 정보
+	 */
+	public MemberVO getMemberByEmail(String email);
 
 }

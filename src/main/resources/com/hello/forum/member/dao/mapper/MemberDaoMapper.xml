@@ -25,36 +25,25 @@
 		, #{salt})
 	</insert>
 
-	<select id="selectSalt" 
-			parameterType="string" 
-			resultType="string">
-		SELECT SALT
-		  FROM MEMBERS
-		 WHERE EMAIL = #{_parameter}
-		   AND DEL_YN = 'N'
-	</select>
-	
-	<select id="selectMemberByEmailAndPassword"
-			parameterType="com.hello.forum.member.vo.MemberVO"
-			resultType="com.hello.forum.member.vo.MemberVO">
-		SELECT EMAIL
-		     , NAME
-		     , PASSWORD
-		     , DEL_YN
-		     , SALT
-		     , ADMIN_YN
-		  FROM MEMBERS
-		 WHERE EMAIL = #{email}
-		   AND PASSWORD = #{password}
-		   AND DEL_YN = 'N'
-	</select>
-  
   	<update id="deleteMemberByEmail"
   			parameterType="string">
   		UPDATE MEMBERS
   		   SET DEL_YN = 'Y'
   		 WHERE EMAIL = #{_parameter}
   	</update>
+  
+  	<select id="getMemberByEmail" 
+  			parameterType="string"
+  			resultType="com.hello.forum.member.vo.MemberVO">
+  		SELECT EMAIL
+		     , NAME
+		     , PASSWORD
+		     , DEL_YN
+		     , SALT
+		     , ADMIN_YN
+		  FROM MEMBERS
+		 WHERE EMAIL = #{_parameter}
+  	</select>
   
 </mapper>
 

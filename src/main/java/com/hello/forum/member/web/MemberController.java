@@ -1,12 +1,14 @@
 package com.hello.forum.member.web;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,17 +16,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.hello.forum.member.service.MemberService;
 import com.hello.forum.member.vo.MemberVO;
 import com.hello.forum.utils.AjaxResponse;
 import com.hello.forum.utils.StringUtils;
 import com.hello.forum.utils.ValidationUtils;
-import com.hello.forum.utils.Validator;
-import com.hello.forum.utils.Validator.Type;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class MemberController {
@@ -39,8 +39,7 @@ public class MemberController {
 		return "member/memberregist";
 	}
 
-	// http://localhost:8080/member/regist/available?email=aaa@aaa.com
-	@ResponseBody // 응답하는 데이터를 JSON으로 변환해 클라이언트에게 반환한다.
+	@ResponseBody
 	@GetMapping("/ajax/member/regist/available")
 	public Map<String, Object> checkAvailableEmail(@RequestParam String email) {
 
@@ -133,52 +132,32 @@ public class MemberController {
 		return "member/memberlogin";
 	}
 
-	@ResponseBody
-	@PostMapping("/ajax/member/login")
-	public AjaxResponse doLogin(MemberVO memberVO, HttpSession session,
-			@RequestParam(defaultValue = "/board/search") String nextUrl) {
-
-		logger.info("NextUrl: " + nextUrl);
-
-		// Validation Check (파라미터 유효성 검사)
-		Validator<MemberVO> validator = new Validator<>(memberVO);
-		validator.add("email", Type.NOT_EMPTY, "이메일을 입력해주세요.")
-				.add("email", Type.EMAIL, "이메일 형식이 아닙니다.")
-				.add("password", Type.NOT_EMPTY, "비밀번호를 입력해주세요").start();
-
-		if (validator.hasErrors()) {
-			Map<String, List<String>> errors = validator.getErrors();
-			return new AjaxResponse().append("errors", errors);
-		}
-
-		MemberVO member = this.memberService.getMember(memberVO);
-
-		// 로그인이 정상적으로 이루어졌다면 세션을 생성한다.
-		// ${sessionScope._LOGIN_USER_.adminYn eq 'Y'}
-		session.setAttribute("_LOGIN_USER_", member);
-		session.setMaxInactiveInterval(20 * 60);
-
-		return new AjaxResponse().append("next", nextUrl);
-	}
-
 	@GetMapping("/member/logout")
-	public String doLogout(HttpSession session) {
-		// Logout 처리.
-		// SessionID로 전달된 세션의 모든 정보를 삭제.
-		session.invalidate();
+	public String doLogout(HttpServletRequest request, //
+			HttpServletResponse response, //
+			Authentication authentication) {
+
+		// Spring Security Logout!
+		LogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+		logoutHandler.logout(request, response, authentication);
+
 		return "redirect:/board/search";
 	}
 
 	@ResponseBody
 	@GetMapping("/ajax/member/delete-me")
-	public AjaxResponse doDeleteMe(HttpSession session,
-			@SessionAttribute("_LOGIN_USER_") MemberVO memberVO) {
+	public AjaxResponse doDeleteMe(HttpServletRequest request, //
+			HttpServletResponse response, //
+			Authentication authentication) {
 		// 현재 로그인되어있는 사용자의 정보
 //		MemberVO memberVO = (MemberVO) session.getAttribute("_LOGIN_USER_");
-		boolean isSuccess = this.memberService.deleteMe(memberVO.getEmail());
+		boolean isSuccess = this.memberService
+				.deleteMe(authentication.getName());
 
 		if (isSuccess) {
-			session.invalidate();
+			// Spring Security Logout!
+			LogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+			logoutHandler.logout(request, response, authentication);
 		}
 
 		return new AjaxResponse().append("next",

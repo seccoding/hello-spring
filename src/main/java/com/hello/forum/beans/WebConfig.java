@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -36,28 +35,5 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/css/**") // /css/로 시작하는 모든 URL
 				.addResourceLocations("classpath:/static/css/");
 	}
-
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new CheckSessionInterceptor())
-				.addPathPatterns(this.authCheckUrlPattern)
-				.excludePathPatterns(this.authCheckIgnoreUrlPatterns);
-
-		registry.addInterceptor(new BlockDuplicateLoginInterceptor())
-				.addPathPatterns("/member/login", "/ajax/member/login",
-						"/member/regist", "/ajax/member/regist");
-	}
-
-	// Filter 등록.
-//	@Bean
-//	FilterRegistrationBean<Filter> filter() {
-//
-//		FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-//		filterRegistrationBean.setFilter(new SessionFilter());
-//		filterRegistrationBean.setUrlPatterns(
-//				List.of("/board/write", "/board/modify/*", "/board/delete/*"));
-//		return filterRegistrationBean;
-//
-//	}
 
 }

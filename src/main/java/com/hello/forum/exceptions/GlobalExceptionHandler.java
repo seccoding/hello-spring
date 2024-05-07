@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler({ FileNotExistsException.class,
 			MakeXlsxFileException.class, AlreadyUseException.class,
-			UserIdentifyNotMatchException.class, RuntimeException.class })
+			RuntimeException.class })
 	public Object viewErrorPage(RuntimeException re, Model model) {
 
 		logger.error(re.getMessage(), re);

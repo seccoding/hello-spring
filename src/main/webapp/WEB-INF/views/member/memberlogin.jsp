@@ -25,6 +25,9 @@ pageEncoding="UTF-8"%>
   </head>
   <body>
     <h1>로그인</h1>
+
+    <div>${message}</div>
+
     <form id="loginForm">
       <input type="hidden" name="next" id="next" value="${nextUrl}" />
       <div class="grid">

@@ -20,14 +20,6 @@ public interface MemberService {
 	 */
 	public boolean checkAvailableEmail(String email);
 
-	/**
-	 * 로그인할 때, 사용되는 메소드. 아이디와 비밀번호가 일치하는 회원 정보를 조회한다.
-	 * 
-	 * @param memberVO 아이디와 비밀번호가 할당되어 있는 객체.
-	 * @return 회원 정보.
-	 */
-	public MemberVO getMember(MemberVO memberVO);
-
 	public boolean deleteMe(String email);
 
 }
