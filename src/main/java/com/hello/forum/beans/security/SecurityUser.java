@@ -55,15 +55,22 @@ public class SecurityUser implements UserDetails {
 	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// 현재 로그인한 사용자는
-		// 모든 자원에 대해 C/R/U/D 할 권한을 가지고 있다!
-		// 원래는 C/R/U/D 에 대한 권한 정보를 DB에서 관리를 해야하며
-		// DB에서 조회된 데이터를 만들어 주어야 한다!
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority("CREATE"));
-		authorities.add(new SimpleGrantedAuthority("READ"));
-		authorities.add(new SimpleGrantedAuthority("UPDATE"));
-		authorities.add(new SimpleGrantedAuthority("DELETE"));
+//		authorities.add(new SimpleGrantedAuthority("CREATE"));
+//		authorities.add(new SimpleGrantedAuthority("READ"));
+//		authorities.add(new SimpleGrantedAuthority("UPDATE"));
+//		authorities.add(new SimpleGrantedAuthority("DELETE"));
+		/**
+		 * memberVO.getAdminYN() == Y ==> ROLE_ADMIN memberVO.getAdminYN() == N
+		 * ==> ROLE_USER
+		 */
+		String role = "ROLE_USER";
+		if (this.memberVO.getAdminYn().equals("Y")) {
+			role = "ROLE_ADMIN";
+		}
+
+		authorities.add(new SimpleGrantedAuthority(role));
+
 		return authorities;
 	}
 

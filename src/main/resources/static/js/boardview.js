@@ -207,10 +207,13 @@ $().ready(function () {
           replyDom.append(contentDom);
 
           var loginEmail = $("#login-email").text();
+          var roleAdmin = $("#role-admin");
+          var isAdmin = roleAdmin && roleAdmin.length > 0;
+
           // <div>
           var controlDom = $("<div></div>");
 
-          if (reply.email === loginEmail) {
+          if (reply.email === loginEmail || isAdmin) {
             // <span class="modify-reply">수정</span>
             var modifyReplyDom = $("<span></span>");
             modifyReplyDom.addClass("modify-reply");
@@ -310,7 +313,16 @@ $().ready(function () {
     $("#txt-reply").removeData("mode");
     $("#txt-reply").removeData("target");
 
-    $.post(url, body, function (response) {
+    // CSRF token을 찾아 body 에 넣어준다.
+    // body {content, parentReplyId, _csrf}
+    var csrfParameterName = $("meta[name=_csrf_parameter]").attr("content");
+    var csrfToken = $("meta[name=" + csrfParameterName + "]").attr("content");
+
+    // body["_csrf"] = csrfToken;
+    // body._csrf = csrfToken;
+    body[csrfParameterName] = csrfToken;
+
+    $.post("http://localhost:9090" + url, body, function (response) {
       var result = response.data.result;
       if (result) {
         loadReplies(boardId);

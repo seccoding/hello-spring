@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -29,6 +31,7 @@ pageEncoding="UTF-8"%>
     <div>${message}</div>
 
     <form id="loginForm">
+      <sec:csrfInput />
       <input type="hidden" name="next" id="next" value="${nextUrl}" />
       <div class="grid">
         <label for="email">이메일</label>

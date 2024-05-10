@@ -9,10 +9,15 @@ $().ready(function () {
       itemsArray.push($(data).val());
     });
 
+    // _csrf
+    var csrfParameterName = $("meta[name=_csrf_parameter").attr("content");
+    // token 값
+    var csrfToken = $("meta[name=" + csrfParameterName + "]").attr("content");
+
     // 서버로 전송한다 (ajax)
     $.post(
       "/ajax/board/delete/massive",
-      { deleteItems: itemsArray },
+      { deleteItems: itemsArray, [csrfParameterName]: csrfToken },
       function (response) {
         var result = response.data.result;
         if (result) {
@@ -56,6 +61,12 @@ $().ready(function () {
     var formData = new FormData();
     // formData에 파일 정보를 첨부시킨다.
     formData.append("excelFile", file);
+
+    // _csrf
+    var csrfParameterName = $("meta[name=_csrf_parameter]").attr("content");
+    var csrfToken = $("meta[name=" + csrfParameterName + "]").attr("content");
+
+    formData.append(csrfParameterName, csrfToken);
 
     // 파일 전송은 $.post로 할 수 없다.
     //$.post();

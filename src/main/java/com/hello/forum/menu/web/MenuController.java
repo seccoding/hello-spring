@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.hello.forum.beans.security.SecurityUser;
 import com.hello.forum.member.vo.MemberVO;
 import com.hello.forum.menu.service.MenuService;
 import com.hello.forum.menu.vo.MenuVO;
@@ -28,14 +30,21 @@ public class MenuController {
 	private static List<MenuVO> cachedMenuList;
 
 	@GetMapping("/ajax/menu/list")
-	private AjaxResponse getMenuList(
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
+	private AjaxResponse getMenuList(Authentication authentication) {
 
 		if (cachedMenuList == null) {
 			cachedMenuList = this.menuService.getAllMenu();
 		}
 
 		List<MenuVO> menuList = cachedMenuList.stream().filter((menu) -> {
+
+			MemberVO memberVO = null;
+
+			if (authentication != null) {
+				UserDetails userDetails = (UserDetails) authentication
+						.getPrincipal();
+				memberVO = ((SecurityUser) userDetails).getMemberVO();
+			}
 
 			if (memberVO == null) {
 				// 로그인을 안한 사용자.
