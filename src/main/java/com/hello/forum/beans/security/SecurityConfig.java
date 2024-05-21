@@ -1,5 +1,7 @@
 package com.hello.forum.beans.security;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.hello.forum.beans.security.handler.LoginFailureHandler;
 import com.hello.forum.beans.security.handler.LoginSuccessHandler;
@@ -153,6 +157,19 @@ public class SecurityConfig {
 
 		http.addFilterAfter(this.jwtAuthenticationFilter,
 				BasicAuthenticationFilter.class);
+
+		http.cors(cors -> {
+			// CORS 설정.
+			CorsConfigurationSource source = (request) -> {
+				CorsConfiguration config = new CorsConfiguration();
+				config.setAllowedOrigins(List.of("http://localhost:3000"));
+				config.setAllowedMethods(
+						List.of("GET", "POST", "PUT", "DELETE"));
+				config.setAllowedHeaders(List.of("*"));
+				return config;
+			};
+			cors.configurationSource(source);
+		});
 
 		return http.build();
 	}
