@@ -1,5 +1,7 @@
 package com.hello.forum.utils;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 
 public class ApiResponse {
@@ -48,6 +50,20 @@ public class ApiResponse {
 		response.status = HttpStatus.FORBIDDEN.value();
 		response.statusMessage = HttpStatus.FORBIDDEN.getReasonPhrase();
 		response.errors = errorMessage;
+		return response;
+	}
+
+	/**
+	 * 필수 파라미터를 빼먹었을 때 사용.
+	 * 
+	 * @param errorMessages
+	 * @return
+	 */
+	public static ApiResponse BAD_REQUEST(List<String> errorMessages) {
+		ApiResponse response = new ApiResponse();
+		response.status = HttpStatus.BAD_REQUEST.value();
+		response.statusMessage = HttpStatus.BAD_REQUEST.getReasonPhrase();
+		response.errors = errorMessages;
 
 		return response;
 	}
