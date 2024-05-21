@@ -153,7 +153,8 @@ public class SecurityConfig {
 
 		// /auth/token URL에서는 CSRF 검사를 하지 않음.
 		http.csrf(csrf -> csrf.ignoringRequestMatchers(
-				AntPathRequestMatcher.antMatcher("/auth/token")));
+				AntPathRequestMatcher.antMatcher("/auth/token"),
+				AntPathRequestMatcher.antMatcher("/api/**")));
 
 		http.addFilterAfter(this.jwtAuthenticationFilter,
 				BasicAuthenticationFilter.class);

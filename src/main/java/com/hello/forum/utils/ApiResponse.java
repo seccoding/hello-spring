@@ -37,6 +37,21 @@ public class ApiResponse {
 		return response;
 	}
 
+	/**
+	 * 권한이 충분하지 않을 때 사용.
+	 * 
+	 * @param errorMessage
+	 * @return
+	 */
+	public static ApiResponse FORBIDDEN(String errorMessage) {
+		ApiResponse response = new ApiResponse();
+		response.status = HttpStatus.FORBIDDEN.value();
+		response.statusMessage = HttpStatus.FORBIDDEN.getReasonPhrase();
+		response.errors = errorMessage;
+
+		return response;
+	}
+
 	public ApiResponse() {
 
 	}
